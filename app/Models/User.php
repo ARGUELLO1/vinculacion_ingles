@@ -9,8 +9,18 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    protected $table = 'user';
+    protected $primaryKey = 'id_user';
+    public $timestamps = true;
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+
+    /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = true;
 
     /**
      * The attributes that are mass assignable.
@@ -18,9 +28,9 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'id_rol',
         'email',
-        'password',
+        'password'
     ];
 
     /**
@@ -44,5 +54,41 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Rol::class, 'rol_id', 'id_rol');
+    }
+
+    /**
+     * Métodos helper para verificar roles
+     */
+    public function esAdministrador()
+    {
+        return $this->role && $this->role->esAdministrador();
+    }
+
+    public function esProfesor()
+    {
+        return $this->role && $this->role->esProfesor();
+    }
+
+    public function esAlumno()
+    {
+        return $this->role && $this->role->esAlumno();
+    }
+
+    public function esCapturista()
+    {
+        return $this->role && $this->role->esCapturista();
+    }
+
+    /**
+     * Accesor para nombre completo
+     */
+    public function getNombreCompletoAttribute()
+    {
+        return trim($this->nombre . ' ' . $this->apellido);
     }
 }
