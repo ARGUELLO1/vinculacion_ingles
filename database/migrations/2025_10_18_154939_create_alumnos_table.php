@@ -12,24 +12,37 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('alumnos', function (Blueprint $table) {
-            $table->id('matricula');
+            $table->id('id_alumno');
+            $table->char('matricula', 10)
+                ->unique()
+                ->nullable();
             $table->string('nombre', 50);
-            $table->string('ap_paterno', 50);
-            $table->string('ap_materno', 50);
-            $table->integer('edad');
+            $table->string('ap_paterno', 50)
+                ->nullable();
+            $table->string('ap_materno', 50)
+                ->nullable();
+            $table->integer('edad')
+                ->nullable();
             $table->foreignId('carrera_id')
+                ->nullable()
                 ->constrained('carreras', 'id_carrera');
-            $table->string('telefono', 15);
-            $table->enum('sexo', ['M', 'F']);
+            $table->string('telefono', 15)
+                ->nullable();
+            $table->enum('sexo', ['M', 'F'])
+                ->nullable();
             $table->foreignId('nivel_id')
+                ->nullable()
                 ->constrained('niveles', 'id_nivel');
             $table->foreignId('estatus_id')
+                ->nullable()
                 ->constrained('estatus_alumnos', 'id_estatus_alumno');
             $table->foreignId('user_id')
                 ->constrained('users', 'id_user');
             $table->foreignId('expediente_id')
+                ->nullable()
                 ->constrained('expedientes', 'id_expediente');
             $table->foreignId('nota_id')
+                ->nullable()
                 ->constrained('notas', 'id_nota');
             $table->timestamps();
 

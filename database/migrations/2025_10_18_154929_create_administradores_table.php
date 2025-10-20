@@ -17,9 +17,12 @@ return new class extends Migration
                 ->constrained('users', 'id_user')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->string('nombre', 50);
-            $table->string('ap_paterno', 50);
-            $table->string('ap_materno', 50);
+            $table->string('nombre', 50)
+                ->nullable();
+            $table->string('ap_paterno', 50)
+                ->nullable();
+            $table->string('ap_materno', 50)
+                ->nullable();
             $table->timestamps();
 
             $table->index('user_id');

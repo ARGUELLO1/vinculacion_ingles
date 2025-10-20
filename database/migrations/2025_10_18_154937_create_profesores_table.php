@@ -16,18 +16,27 @@ return new class extends Migration
             $table->string('nombre', 50);
             $table->string('ap_paterno', 50);
             $table->string('ap_materno', 50);
-            $table->integer('edad');
+            $table->integer('edad')
+                ->nullable();
             $table->foreignId('estado_civil_id')
-                ->constrained('estados_civiles', 'id_estado_civil');
+                ->constrained('estados_civiles', 'id_estado_civil')
+                ->nullable();
             $table->enum('sexo', ['M', 'F']);
-            $table->string('calle');
-            $table->string('numero', 20);
-            $table->string('colonia');
-            $table->char('codigo_postal', 5);
+            $table->string('calle')
+                ->nullable();
+            $table->string('numero', 20)
+                ->nullable();
+            $table->string('colonia')
+                ->nullable();
+            $table->char('codigo_postal', 5)
+                ->nullable();
             $table->foreignId('municipio_id')
-                ->constrained('municipios', 'id_municipio');
-            $table->string('estado', 50);
-            $table->char('rfc', 13);
+                ->constrained('municipios', 'id_municipio')
+                ->nullable();
+            $table->string('estado', 50)
+                ->nullable();
+            $table->char('rfc', 13)
+                ->nullable();
             $table->enum('estatus', ['activo', 'inactivo']);
             $table->foreignId('user_id')
                 ->constrained('users', 'id_user');

@@ -7,21 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Administrador extends Model
 {
-    use HasFactory;
-
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
     protected $table = 'administradores';
-
-    /**
-     * The primary key for the model.
-     *
-     * @var string
-     */
     protected $primaryKey = 'id_admin';
+    public $timestamps = true;
+    use HasFactory;
 
     /**
      * Indicates if the IDs are auto-incrementing.
