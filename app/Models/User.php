@@ -6,22 +6,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    protected $table = 'users';
-    protected $primaryKey = 'id_user';
-    public $timestamps = true;
-
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
-
-    /**
-     * Indicates if the IDs are auto-incrementing.
-     *
-     * @var bool
-     */
-    public $incrementing = true;
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -29,10 +19,9 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'rol_id',
+        'name',
         'email',
         'password',
-        'name' // Agregar esto si existe en tu tabla
     ];
 
     /**
@@ -58,95 +47,43 @@ class User extends Authenticatable
         ];
     }
 
-    // Relación con la tabla Roles (CORREGIDO)
-    public function rol()
-    {
-        return $this->belongsTo(Rol::class, 'rol_id', 'id_rol');
-    }
-
-    // Método para verificar rol (CORREGIDO)
-    public function hasRol($role)
-    {
-        if (is_string($role)) {
-            return $this->rol && $this->rol->tipo_rol === $role;
-        }
-
-        return $this->rol && $this->rol->id_rol === $role->id_rol;
-    }
-
-    // Método alternativo más simple
-    public function esAlumno()
-    {
-        return $this->rol && $this->rol->tipo_rol === 'alumno';
-    }
-
-    public function esProfesor()
-    {
-        return $this->rol && $this->rol->tipo_rol === 'profesor';
-    }
-
-    public function esAdministrador()
-    {
-        return $this->rol && $this->rol->tipo_rol === 'administrador';
-    }
-
-    // Relación con Alumno
+    /**
+     * Relación con el modelo Alumno
+     */
     public function alumno()
     {
-        return $this->hasOne(Alumno::class, 'user_id', 'id_user');
+        return $this->hasOne(Alumno::class, 'user_id');
     }
 
-    // Relación con Administrador
-    public function administrador()
-    {
-        return $this->hasOne(Administrador::class, 'user_id', 'id_user');
-    }
-
-    // Relación con Profesor
+    /**
+     * Relación con el modelo Profesor
+     */
     public function profesor()
     {
-        return $this->hasOne(Profesor::class, 'user_id', 'id_user');
+        return $this->hasOne(Profesor::class, 'user_id');
     }
 
     /**
-     * Accesor para nombre completo (ACTUALIZADO)
+     * Relación con el modelo Administrador
      */
-    public function getNombreCompletoAttribute()
+    public function administrador()
     {
-        // Si los datos están en las tablas relacionadas
-        if ($this->esAlumno() && $this->alumno) {
-            return $this->alumno->nombre . ' ' . $this->alumno->ap_paterno . ' ' . $this->alumno->ap_materno;
-        }
-
-        if ($this->esProfesor() && $this->profesor) {
-            return $this->profesor->nombre . ' ' . $this->profesor->ap_paterno . ' ' . $this->profesor->ap_materno;
-        }
-
-        if ($this->esAdministrador() && $this->administrador) {
-            return $this->administrador->nombre . ' ' . $this->administrador->ap_paterno . ' ' . $this->administrador->ap_materno;
-        }
-
-        return $this->name ?? 'Usuario';
+        return $this->hasOne(Administrador::class, 'user_id');
     }
 
     /**
-     * Obtener los datos del perfil según el rol
+     * Relación con el modelo Coordinador
      */
-    public function perfil()
+    public function coordinador()
     {
-        if ($this->esAlumno()) {
-            return $this->alumno;
-        } elseif ($this->esProfesor()) {
-            return $this->profesor;
-        } elseif ($this->esAdministrador()) {
-            return $this->administrador;
-        }
-
-        return null;
+        return $this->hasOne(Coordinador::class, 'user_id');
     }
 
-    public function esCapturista()
+    /**
+     * Relación con el modelo Capturista
+     */
+    public function capturista()
     {
-        return $this->rol && $this->rol->tipo_rol === 'capturista';
+        return $this->hasOne(Capturista::class, 'user_id');
     }
 }

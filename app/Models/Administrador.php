@@ -4,26 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Administrador extends Model
 {
-    protected $table = 'administradores';
-    protected $primaryKey = 'id_admin';
-    public $timestamps = true;
     use HasFactory;
 
-    /**
-     * Indicates if the IDs are auto-incrementing.
-     *
-     * @var bool
-     */
-    public $incrementing = true;
+    protected $primaryKey = 'id_admin';
+    protected $table = 'administradores';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'user_id',
         'nombre',
@@ -31,29 +20,16 @@ class Administrador extends Model
         'ap_materno',
     ];
 
-    /**
-     * Relación con User - UN Administrador pertenece a UN User
-     */
-    public function user()
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id', 'id_user');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
-     * Accesor para nombre completo
+     * Get the full name of the administrador.
      */
-    public function getNombreCompletoAttribute()
+    public function getNombreCompletoAttribute(): string
     {
-        return trim($this->nombre . ' ' . $this->ap_paterno . ' ' . $this->ap_materno);
-    }
-
-    /**
-     * Scope para búsqueda por nombre
-     */
-    public function scopePorNombre($query, $nombre)
-    {
-        return $query->where('nombre', 'like', "%{$nombre}%")
-            ->orWhere('ap_paterno', 'like', "%{$nombre}%")
-            ->orWhere('ap_materno', 'like', "%{$nombre}%");
+        return trim("{$this->nombre} {$this->ap_paterno} {$this->ap_materno}");
     }
 }

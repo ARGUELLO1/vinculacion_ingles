@@ -1,74 +1,58 @@
 <?php
-// routes/web.php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Auth;
+use App\Livewire\Admin\Dashboard as DashboardAdmin;
+use App\Livewire\Admin\Usuarios\Capturistas\Index as CapturistasIndex;
+use App\Livewire\Admin\Usuarios\Capturistas\Create as CapturistasCreate;
+use App\Livewire\Admin\Usuarios\Capturistas\Update as CapturistasUpdate;
+use App\Livewire\Admin\Usuarios\Coordinadores\Index as CoordinadoresIndex;
+use App\Livewire\Admin\Usuarios\Coordinadores\Create as CoordinadoresCreate;
+use App\Livewire\Admin\Usuarios\Coordinadores\Update as CoordinadorUpdate;
+use App\Livewire\Admin\Usuarios\Profesores\Index as ProfesoresIndex;
+use App\Livewire\Admin\Usuarios\Profesores\Create as ProfesoresCreate;
+use App\Livewire\Admin\Usuarios\Profesores\Update as ProfesoresUpdate;
+use App\Livewire\Admin\Usuarios\Alumnos\Index as AlumnosIndex;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('auth.login');
-});
+Route::view('/', 'welcome');
 
-Route::get('/dashboard', function () {
-    $user = Auth::user();
-
-    switch ($user->rol_id) {
-        case 1:
-            return view('admin.dashboard');
-        case 2:
-            return view('capturista.dashboard');
-        case 3:
-            return view('profesor.dashboard');
-        case 4:
-            return view('alumno.dashboard');
-        default:
-            return view('auth.login');
-    }
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-// Rutas públicas de perfil
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Ruta Dashboard Principal (Redirige según rol)
+    Route::get('/dashboard', function () {
+        $user = auth()->user();
+        $mainRole = $user->getRoleNames()->first();
+
+        return match (strtolower($mainRole)) {
+            'admin' => view('livewire.admin.dashboard'),
+            'alumno' => view('livewire.alumno.dashboard'),
+        };
+    })->name('dashboard');
+
+    // Rutas de Perfil (Comunes para todos los roles)
+    Route::view('profile', 'profile')->name('profile');
+
+    //ADMIN
+    Route::prefix('admin')->middleware(['role:admin'])->group(function () {
+        //Dashboard principal del administrador
+        Route::get('/dashboard', DashboardAdmin::class)->name('admin.dashboard');
+
+        //Logica sobre Coordinadores
+        Route::get('/coordinadores', CoordinadoresIndex::class)->name('admin.coordinadores.index');
+        Route::get('/coordinadores/create', CoordinadoresCreate::class)->name('admin.coordinadores.create');
+        Route::get('/coordinadores/{coordinador}/edit', CoordinadorUpdate::class)->name('admin.coordinadores.edit');
+
+        //Logica sobre Capturistas
+        Route::get('/capturistas', CapturistasIndex::class)->name('admin.capturistas.index');
+        Route::get('/capturistas/create', CapturistasCreate::class)->name('admin.capturistas.create');
+        Route::get('/capturistas/{capturista}/edit', CapturistasUpdate::class)->name('admin.capturistas.edit');
+
+        //Logica sobre Profesores
+        Route::get('/profesores', ProfesoresIndex::class)->name('admin.profesores.index');
+        Route::get('/profesores/cresate', ProfesoresCreate::class)->name('admin.profesores.create');
+        Route::get('/profesores/{profesor}/edit', ProfesoresUpdate::class)->name('admin.profesores.edit');
+
+        //Logica sobre Alumnos
+        Route::get('/alomnos', AlumnosIndex::class)->name('admin.alumnos.index');
+    });
 });
-
-// RUTAS POR ROLES usando el middleware de roles
-
-// Solo Admin (rol 1)
-Route::middleware(['auth', 'rol:1'])->prefix('admin')->group(function () {
-    Route::get('/panel', function () {
-        return view('admin.dashboard');
-    })->name('admin.panel');
-});
-
-
-// Solo Capturistas (rol 2)
-Route::middleware(['auth', 'rol:2'])->prefix('capturista')->group(function () {
-    Route::get('/panel', function () {
-        return view('capturista.dashboard');
-    })->name('capturista.panel');
-});
-
-// Solo Profesores (rol 3)
-Route::middleware(['auth', 'rol:3'])->prefix('profesor')->group(function () {
-    Route::get('/panel', function () {
-        return view('profesor.dashboard');
-    })->name('profesor.panel');
-});
-
-// Solo Alumnos (rol 4)
-Route::middleware(['auth', 'rol:4'])->prefix('alumno')->group(function () {
-    Route::get('/panel', function () {
-        return view('alumno.dashboard');
-    })->name('alumno.panel');
-});
-
-// Múltiples roles (Admin y Capturista)
-/*Route::middleware(['auth', 'role:1,2'])->prefix('staff')->group(function () {
-    Route::get('/panel', function () {
-        return view('staff.dashboard');
-    })->name('staff.panel');
-});*/
 
 require __DIR__ . '/auth.php';
