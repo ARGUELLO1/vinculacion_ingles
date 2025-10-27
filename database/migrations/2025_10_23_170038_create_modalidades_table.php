@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('notas', function (Blueprint $table) {
-            $table->id('id_nota');
-            $table->decimal('nota_parcial_1', 3, 1);
-            $table->decimal('nota_parcial_2', 3, 1);
-            $table->decimal('nota_parcial_3', 3, 1);
+        Schema::create('modalidades', function (Blueprint $table) {
+            $table->id('id_modalidad');
+            $table->string('tipo_modalidad', 100);
             $table->timestamps();
         });
     }
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('notas');
+        Schema::dropIfExists('modalidades');
     }
 };

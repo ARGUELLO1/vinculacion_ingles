@@ -14,17 +14,18 @@ return new class extends Migration
         Schema::create('niveles', function (Blueprint $table) {
             $table->id('id_nivel');
             $table->char('nivel', 3);
-            $table->char('grupo', 3);
+            $table->char('nombre_grupo', 4);
             $table->string('aula', 255);
-            $table->foreignId('profesor_id')->constrained('profesores', 'id_profesor');
             $table->integer('cupo_max');
+            $table->string('horario');
+            $table->foreignId('profesor_id')->constrained('profesores', 'id_profesor');
             $table->foreignId('periodo_id')->constrained('periodos', 'id_periodo');
-            $table->string('modalidad', 50);
-            $table->string('horario', 50);
+            $table->foreignId('modalidad_id')->constrained('modalidades', 'id_modalidad');
             $table->timestamps();
 
             $table->index('profesor_id');
             $table->index('periodo_id');
+            $table->index('modalidad_id');
         });
     }
 

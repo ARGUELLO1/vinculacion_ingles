@@ -13,21 +13,18 @@ return new class extends Migration
     {
         Schema::create('expedientes', function (Blueprint $table) {
             $table->id('id_expediente');
-            $table->integer('nivel')->nullable();
-            $table->text('lin_captura')->nullable();
-            $table->text('soli_aspirante')->nullable();
-            $table->text('acta_nac')->nullable();
-            $table->text('comp_estu')->nullable();
-            $table->text('ine')->nullable();
-            $table->text('comp_pago')->nullable();
-            $table->text('lin_captura_t')->nullable();
+            $table->foreignId('alumno_id')->constrained('alumnos', 'id_alumno');
+            $table->foreignId('nivel_id')->constrained('niveles', 'id_nivel');
+            $table->string('ruta_expediente');
+            $table->text('lin_captura_t');
             $table->date('fecha_pago');
             $table->date('fecha_entrega');
             $table->timestamps();
 
-            $table->index('nivel');
             $table->index('fecha_pago');
             $table->index('fecha_entrega');
+            $table->index('ruta_expediente');
+            $table->index(['alumno_id', 'nivel_id']);
         });
     }
 

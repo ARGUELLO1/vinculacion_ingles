@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('alumnos', function (Blueprint $table) {
             $table->id('id_alumno');
-            $table->char('matricula', 10)->unique()->nullable();
+            $table->char('matricula', 10)->unique();
             $table->string('nombre', 50);
             $table->string('ap_paterno', 50)->nullable();
             $table->string('ap_materno', 50)->nullable();
@@ -21,19 +21,18 @@ return new class extends Migration
             $table->foreignId('carrera_id')->nullable()->constrained('carreras', 'id_carrera');
             $table->string('telefono', 15)->nullable();
             $table->enum('sexo', ['M', 'F'])->nullable();
+            $table->string('colonia')->nullable();
+            $table->foreignId('municipio_id')->nullable()->constrained('municipios', 'id_municipio');
             $table->foreignId('nivel_id')->nullable()->constrained('niveles', 'id_nivel');
             $table->foreignId('estatus_id')->nullable()->constrained('estatus_alumnos', 'id_estatus_alumno');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('expediente_id')->nullable()->constrained('expedientes', 'id_expediente');
-            $table->foreignId('nota_id')->nullable()->constrained('notas', 'id_nota');
             $table->timestamps();
 
             $table->index('carrera_id');
+            $table->index('municipio_id');
             $table->index('nivel_id');
             $table->index('estatus_id');
             $table->index('user_id');
-            $table->index('expediente_id');
-            $table->index('nota_id');
         });
     }
 

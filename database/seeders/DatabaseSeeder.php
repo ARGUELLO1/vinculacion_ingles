@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             CarrerasSeeder::class,
             EstadosCivilesSeeder::class,
             EstatusAlumnosSeeder::class,
-            // Agrega aquí otros seeders que necesites
+            UserSeeder::class,
         ]);
     }
 }
