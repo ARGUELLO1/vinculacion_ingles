@@ -1,3 +1,40 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* ──────────────────────────────── */
+/* Estilos para la barra de navegación INICIAL*/
+/* ──────────────────────────────── */
+
+.welcome-nav {
+  background-color: #1b396a; /* azul TECNM */
+  padding: 1rem 2rem;        
+  display: flex;
+  justify-content: center;  
+  align-items: center;       
+  gap: 2rem;                
+  
+  width: 100%;              
+  margin: 0;                
+  box-sizing: border-box;    
+  
+  position: fixed;          
+  top: 0;
+  left: 0;
+  z-index: 1000;             
+}
+
+
+
+/* Enlaces dentro del nav */
+.welcome-nav a {
+  color: white !important;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.welcome-nav a:hover {
+  color: #e2e8f0 !important; /* gris claro al pasar el mouse */
+}
