@@ -4,6 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+use function Laravel\Prompts\table;
+
 return new class extends Migration
 {
     /**
@@ -13,13 +15,14 @@ return new class extends Migration
     {
         Schema::create('asistencias', function (Blueprint $table) {
             $table->id('id_asistencia');
-            $table->foreignId('alumno_id')->constrained('alumnos', 'id_alumno')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('nivel_id')->constrained('niveles', 'id_nivel')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('alumno_id')->constrained('alumnos', 'id_alumno');
+            $table->foreignId('nivel_id')->constrained('niveles', 'id_nivel');
+            $table->integer('parcial');
+            $table->date('fecha');
             $table->enum('asistencia', ['A', 'F']);
             $table->timestamps();
 
-            $table->index('alumno_id');
-            $table->index('nivel_id');
+            $table->unique(['alumno_id', 'nivel_id', 'fecha']);
         });
     }
 
@@ -28,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('asistencias_tables');
+        Schema::dropIfExists('asistencias');
     }
 };

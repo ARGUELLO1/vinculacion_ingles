@@ -14,6 +14,7 @@ Route::middleware('auth')->group(function () {
         return match (strtolower($mainRole)) {
             'admin' => redirect()->route('admin.dashboard'),
             'coordinador' => redirect()->route('coordinador.dashboard'),
+            'capturista' => redirect()->route('capturista.dashboard'),
         };
     })->name('dashboard');
 
@@ -21,10 +22,13 @@ Route::middleware('auth')->group(function () {
     Route::view('profile', 'profile')->name('profile');
 
     //ADMIN
-    require __DIR__ . '/AdminRoutes.php';
+    require __DIR__ . '/UsuariosRoutes/AdminRoutes.php';
 
     //Coordinador
-    require __DIR__ . '/CoordinadorRoutes.php';
+    require __DIR__ . '/UsuariosRoutes/CoordinadorRoutes.php';
+
+    //Capturista
+    require __DIR__ . '/UsuariosRoutes/CapturistaRoutes.php';
 });
 
 require __DIR__ . '/auth.php';

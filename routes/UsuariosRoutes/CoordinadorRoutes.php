@@ -4,8 +4,8 @@ use Illuminate\Support\Facades\Route;
 
 //Rutas del Coordinador
 use App\Livewire\Coordinador\Dashboard as DashboardCoordinador;
-use App\Livewire\Coordinador\Perimsos\Index as CoordinadorPermisosIndex;
-use App\Livewire\Coordinador\Perimsos\Create as CoordinadorPermisosCreate;
+use App\Livewire\Coordinador\Permisos\Index as CoordinadorPermisosIndex;
+use App\Livewire\Coordinador\Permisos\Create as CoordinadorPermisosCreate;
 use App\Livewire\Coordinador\Usuarios\Capturistas\Index as CoordinadorCapturistasIndex;
 use App\Livewire\Coordinador\Usuarios\Capturistas\Create as CoordinadorCapturistasCreate;
 use App\Livewire\Coordinador\Usuarios\Capturistas\Update as CoordinadorCapturistasUpdate;

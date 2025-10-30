@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             EstadosCivilesSeeder::class,
             EstatusAlumnosSeeder::class,
             UserSeeder::class,
+            PeriodosSeeder::class,
+            ModalidadesSeeder::class
         ]);
     }
 }
