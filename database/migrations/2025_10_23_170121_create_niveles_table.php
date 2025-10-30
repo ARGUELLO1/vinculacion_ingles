@@ -15,12 +15,15 @@ return new class extends Migration
             $table->id('id_nivel');
             $table->char('nivel', 3);
             $table->char('nombre_grupo', 4);
-            $table->string('aula', 255);
+            $table->string('aula');
             $table->integer('cupo_max');
             $table->string('horario');
             $table->foreignId('profesor_id')->constrained('profesores', 'id_profesor');
             $table->foreignId('periodo_id')->constrained('periodos', 'id_periodo');
             $table->foreignId('modalidad_id')->constrained('modalidades', 'id_modalidad');
+            $table->enum('parcial_1', ['1', '0'])->nullable();
+            $table->enum('parcial_2', ['1', '0'])->nullable();
+            $table->enum('parcial_3', ['1', '0'])->nullable();
             $table->timestamps();
 
             $table->index('profesor_id');
