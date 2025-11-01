@@ -11,6 +11,11 @@ use App\Livewire\Admin\Usuarios\Profesores\Index as ProfesoresIndex;
 use App\Livewire\Admin\Usuarios\Profesores\Create as ProfesoresCreate;
 use App\Livewire\Admin\Usuarios\Profesores\Update as ProfesoresUpdate;
 use App\Livewire\Admin\Usuarios\Alumnos\Index as AlumnosIndex;
+use App\Livewire\Alumno\Carterm;
+use App\Livewire\Alumno\Infoalumno;
+use App\Livewire\Alumno\Inscribirse;
+use App\Livewire\Alumno\Principal;
+use App\Livewire\Alumno\Reinscribirse;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -52,6 +57,14 @@ Route::middleware('auth')->group(function () {
 
         //Logica sobre Alumnos
         Route::get('/alomnos', AlumnosIndex::class)->name('admin.alumnos.index');
+    });
+
+    Route::prefix('alumno')->name('alumno.')->middleware(['role:alumno'])->group(function () {
+        Route::get('/principal', Principal::class)->name('principal');
+        Route::get('/inscribirse', Inscribirse::class)->name('inscribirse');
+        Route::get('/reinscribirse', Reinscribirse::class)->name('reinscribirse');
+        Route::get('/cartas_de_termino', Carterm::class)->name('carterm');
+        Route::get('/informacion_del_alumno', Infoalumno::class)->name('infoalumno');
     });
 });
 

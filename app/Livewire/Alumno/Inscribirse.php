@@ -4,11 +4,10 @@ namespace App\Livewire\Alumno;
 
 use Livewire\Component;
 
-class Dashboard extends Component
+class Inscribirse extends Component
 {
-
     public function render()
     {
-        return view('livewire.alumno.dashboard');
+        return view('livewire.alumno.inscribirse');
     }
 }
