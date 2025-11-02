@@ -1,7 +1,7 @@
 <div>
     <x-slot name="header">
         <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <h2 class="font-semibold text-xl text-white leading-tight">
                 Gestión de Capturistas
             </h2>
 
@@ -89,8 +89,9 @@
                                             <x-secondary-button :href="route('admin.capturistas.edit', $user->capturista)" wire:navigate>
                                                 Editar
                                             </x-secondary-button>
-                                            <x-danger-button wire:click="delete({{ $user->id }})"
-                                                wire:confirm="¿Estás seguro de eliminar este coordinador?">
+
+                                            <x-danger-button
+                                                wire:click="$dispatch('openDeleteUserModal', { userId: {{ $user->id }}, userType: 'capturista' })">
                                                 Eliminar
                                             </x-danger-button>
                                         </div>
@@ -114,6 +115,8 @@
         </div>
     </div>
 
+    <livewire:admin.usuarios.delete-modal />
+
     <!-- Sistema de Notificaciones Automáticas -->
     @if (session('success'))
         <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)"
@@ -121,7 +124,8 @@
             x-transition:enter-start="opacity-0 transform translate-y-2"
             x-transition:enter-end="opacity-100 transform translate-y-0"
             x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
-            x-transition:leave-end="opacity-0" class="pointer-events-auto fixed bottom-4 right-4 z-50 max-w-sm">
+            x-transition:leave-end="opacity-0"
+            class="pointer-events-auto inset-0 z-50 flex items-center justify-center p-4">
 
             <div class="rounded-lg border border-green-400 bg-white shadow-lg">
                 <div class="flex items-center gap-3 bg-green-50 p-4">

@@ -17,47 +17,53 @@ use App\Livewire\Alumno\Inscribirse;
 use App\Livewire\Alumno\Principal;
 use App\Livewire\Alumno\Reinscribirse;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ExportController;
 
-Route::view('/', 'welcome');
+Route::view('/', 'index');
 
 Route::middleware('auth')->group(function () {
     // Ruta Dashboard Principal (Redirige según rol)
     Route::get('/dashboard', function () {
         $user = auth()->user();
         $mainRole = $user->getRoleNames()->first();
-
+        
         return match (strtolower($mainRole)) {
-            'admin' => view('livewire.admin.dashboard'),
-            'alumno' => view('livewire.alumno.dashboard'),
+            'admin' => redirect()->route('admin.dashboard'),
+            'coordinador' => redirect()->route('coordinador.dashboard'),
+            'capturista' => redirect()->route('capturista.dashboard'),
+            'profesor' => redirect()->route('profesor.dashboard'),
+            'alumno' => redirect()->route('Alumno.dashboard'),
         };
     })->name('dashboard');
+
+    //excel de profesor
+    Route::get('/grupo/{grupo}/exportar-asistencias/{parcial}', [ExportController::class, 'exportarAsistencias'])
+        ->name('exportar.asistencias')
+        ->where('parcial', '[1-3]'); // Asegura que el parcial solo sea 1, 2 o 3
+
+    //pdf profesor
+    Route::get('/grupo/{grupo}/reporte-pdf/{parcial?}', [ExportController::class, 'exportarReportePDF'])
+    ->name('exportar.reporte')
+    ->where('parcial', '[1-3]');
 
     // Rutas de Perfil (Comunes para todos los roles)
     Route::view('profile', 'profile')->name('profile');
 
     //ADMIN
-    Route::prefix('admin')->middleware(['role:admin'])->group(function () {
-        //Dashboard principal del administrador
-        Route::get('/dashboard', DashboardAdmin::class)->name('admin.dashboard');
+    require __DIR__ . '/UsuariosRoutes/AdminRoutes.php';
 
-        //Logica sobre Coordinadores
-        Route::get('/coordinadores', CoordinadoresIndex::class)->name('admin.coordinadores.index');
-        Route::get('/coordinadores/create', CoordinadoresCreate::class)->name('admin.coordinadores.create');
-        Route::get('/coordinadores/{coordinador}/edit', CoordinadorUpdate::class)->name('admin.coordinadores.edit');
+    //Coordinador
+    require __DIR__ . '/UsuariosRoutes/CoordinadorRoutes.php';
 
-        //Logica sobre Capturistas
-        Route::get('/capturistas', CapturistasIndex::class)->name('admin.capturistas.index');
-        Route::get('/capturistas/create', CapturistasCreate::class)->name('admin.capturistas.create');
-        Route::get('/capturistas/{capturista}/edit', CapturistasUpdate::class)->name('admin.capturistas.edit');
+    //Capturista
+    require __DIR__ . '/UsuariosRoutes/CapturistaRoutes.php';
 
-        //Logica sobre Profesores
-        Route::get('/profesores', ProfesoresIndex::class)->name('admin.profesores.index');
-        Route::get('/profesores/cresate', ProfesoresCreate::class)->name('admin.profesores.create');
-        Route::get('/profesores/{profesor}/edit', ProfesoresUpdate::class)->name('admin.profesores.edit');
+    //Profesor
+    require __DIR__ . '/UsuariosRoutes/ProfesorRoutes.php';
 
         //Logica sobre Alumnos
         Route::get('/alomnos', AlumnosIndex::class)->name('admin.alumnos.index');
-    });
+
 
     Route::prefix('alumno')->name('alumno.')->middleware(['role:alumno'])->group(function () {
         Route::get('/principal', Principal::class)->name('principal');
@@ -66,6 +72,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/cartas_de_termino', Carterm::class)->name('carterm');
         Route::get('/informacion_del_alumno', Infoalumno::class)->name('infoalumno');
     });
+    //Alumno
+    require __DIR__ . '/UsuariosRoutes/AlumnoRoutes.php';
 });
 
 require __DIR__ . '/auth.php';

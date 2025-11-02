@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Alumno extends Model
@@ -59,9 +60,10 @@ class Alumno extends Model
         return $this->belongsTo(Expediente::class, 'expediente_id');
     }
 
-    public function nota(): BelongsTo
+    public function notas(): HasMany
     {
-        return $this->belongsTo(Nota::class, 'nota_id');
+        // Un alumno tiene muchas notas
+        return $this->hasMany(Nota::class, 'alumno_id', 'id_alumno');
     }
 
     /**

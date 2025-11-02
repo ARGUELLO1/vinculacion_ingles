@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Nota extends Model
 {
@@ -16,8 +16,9 @@ class Nota extends Model
         'nota_parcial_1',
         'nota_parcial_2',
         'nota_parcial_3',
+        'alumno_id',  // <-- AÑADIR ESTA LÍNEA
+        'nivel_id',    // <-- AÑADIR ESTA LÍNEA
     ];
-
     protected $casts = [
         'nota_parcial_1' => 'decimal:1',
         'nota_parcial_2' => 'decimal:1',
@@ -26,9 +27,16 @@ class Nota extends Model
         'updated_at' => 'datetime',
     ];
 
-    public function alumnos(): HasMany
+
+    public function alumno(): BelongsTo
     {
-        return $this->hasMany(Alumno::class, 'nota_id');
+        // Una nota pertenece a un alumno
+        return $this->belongsTo(Alumno::class, 'alumno_id', 'id_alumno');
+    }
+    public function nivel(): BelongsTo
+    {
+        // Una nota pertenece a un nivel (grupo)
+        return $this->belongsTo(Nivel::class, 'nivel_id', 'id_nivel');
     }
 
     /**

@@ -25,6 +25,7 @@ class RolePermissionSeeder extends Seeder
         Permission::create(['name' => 'coordinadores.create', 'descripcion' => 'Poder crear Coordinadores'])->syncRoles($adminRole);
         Permission::create(['name' => 'coordinadores.update', 'descripcion' => 'Poder editar Coordinadores'])->syncRoles($adminRole);
         Permission::create(['name' => 'coordinadores.delete', 'descripcion' => 'Poder eliminar Coordinadores'])->syncRoles($adminRole);
+        Permission::create(['name' => 'coordinadores.options', 'descripcion' => 'Poder ver columna de opciones en Coordinadores'])->syncRoles($adminRole);
 
         //Permisos sobre capturistas
         Permission::create(['name' => 'capturistas.index', 'descripcion' => 'Poder visualizar Capturistas'])->syncRoles($adminRole, $coordinadorRole);
@@ -33,12 +34,14 @@ class RolePermissionSeeder extends Seeder
         Permission::create(['name' => 'capturistas.create', 'descripcion' => 'Poder crear Capturistas'])->syncRoles($adminRole);
         Permission::create(['name' => 'capturistas.update', 'descripcion' => 'Poder editar Capturistas'])->syncRoles($adminRole);
         Permission::create(['name' => 'capturistas.delete', 'descripcion' => 'Poder eliminar Capturistas'])->syncRoles($adminRole);
+        Permission::create(['name' => 'capturistas.options', 'descripcion' => 'Poder ver columna de opciones en Capturistas'])->syncRoles($adminRole);
 
         //Permisos sobre profesores
         Permission::create(['name' => 'profesores.index', 'descripcion' => 'Poder visualizar Profesores'])->syncRoles($adminRole, $coordinadorRole);
         Permission::create(['name' => 'profesores.create', 'descripcion' => 'Poder crear Profesores'])->syncRoles($adminRole);
         Permission::create(['name' => 'profesores.update', 'descripcion' => 'Poder editar Profesores'])->syncRoles($adminRole, $profesorRole);
         Permission::create(['name' => 'profesores.delete', 'descripcion' => 'Poder eliminar Profesores'])->syncRoles($adminRole);
+        Permission::create(['name' => 'profesores.options', 'descripcion' => 'Poder ver columna de opciones en Profesores'])->syncRoles($adminRole);
 
         //Permisos sobre alumnos
         Permission::create(['name' => 'alumnos.index', 'descripcion' => 'Poder visualizar Alumnos'])->syncRoles($adminRole, $coordinadorRole);
@@ -47,6 +50,8 @@ class RolePermissionSeeder extends Seeder
         //Permisos sobre niveles
         Permission::create(['name' => 'niveles.index', 'descripcion' => 'Poder visualizar Niveles'])->syncRoles($adminRole, $coordinadorRole, $capturistaRole);
         Permission::create(['name' => 'niveles.create', 'descripcion' => 'Poder crear Niveles'])->syncRoles($capturistaRole);
+        Permission::create(['name' => 'niveles.options', 'descripcion' => 'Poder ver columna de opciones en Niveles'])->syncRoles($adminRole, $coordinadorRole, $capturistaRole);
+        Permission::create(['name' => 'niveles.show', 'descripcion' => 'Poder visualizar los datos del campo seleccioando en Niveles'])->syncRoles($adminRole, $coordinadorRole, $capturistaRole);
 
         //Solo con permisos concedidos por el administrador o el coordinador
         Permission::create(['name' => 'niveles.update', 'descripcion' => 'Poder editar Niveles']);
@@ -56,6 +61,5 @@ class RolePermissionSeeder extends Seeder
 
         //Coordinador solo con permisos concedidos por el administrador
         Permission::create(['name' => 'permisos.create', 'descripcion' => 'Poder conceder permisos'])->syncRoles($adminRole);
-        Permission::create(['name' => 'permisos.update', 'descripcion' => 'Poder editar permisos'])->syncRoles($adminRole);
     }
 }
