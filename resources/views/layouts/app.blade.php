@@ -13,11 +13,19 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js']) <!-- ✅ ESTA LÍNEA ES CRÍTICA -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100">
+    <!-- Imagen de fondo con blur -->
+    <div class="fixed inset-0 -z-10">
+        <img src="{{ asset('images/explanada.jpg') }}" alt="Background"
+            class="w-full h-full object-cover filter blur-sm">
+        <!-- Overlay para mejor legibilidad -->
+        <div class="absolute inset-0 bg-black/30"></div>
+    </div>
+
+    <div class="min-h-screen">
         <!-- Navegación dinámica según rol -->
         @auth
             @switch(auth()->user()->getRoleNames()->first())
@@ -29,6 +37,10 @@
                     <livewire:layout.coordinador.navigation />
                 @break
 
+                @case('capturista')
+                    <livewire:layout.capturista.navigation />
+                @break
+
                 @case('profesor')
                     <livewire:layout.profesor.navigation />
                 @break
@@ -37,18 +49,16 @@
                     <livewire:layout.alumno.navigation />
                 @break
 
-                <!-- ... otros roles ... -->
-
                 @default
-                    <livewire:layout.navigation />
+                    <livewire:layouts.navigation />
             @endswitch
         @else
-            <livewire:layout.navigation />
+            <livewire:layouts.navigation />
         @endauth
 
         <!-- Page Heading -->
         @if (isset($header))
-            <header class="bg-white shadow">
+            <header class="bg-blue-800 shadow">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     {{ $header }}
                 </div>
@@ -60,8 +70,6 @@
             {{ $slot }}
         </main>
     </div>
-
-    @livewireScripts
 </body>
 
 </html>

@@ -15,7 +15,7 @@ new class extends Component {
     }
 }; ?>
 
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+<nav x-data="{ open: false }" class="bg-blue-800 border-b border-blue-800">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -23,20 +23,26 @@ new class extends Component {
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}" wire:navigate>
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                        <x-application-logo class="block h-9 w-auto fill-current text-red-500" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('admin.dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
 
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link wire:navigate>
-                        {{ __('Roles') }}
+                    <x-nav-link :href="route('admin.permisos.index')" :active="request()->routeIs('admin.permisos.index')" wire:navigate>
+                        {{ __('Permisos') }}
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('admin.niveles.index')" :active="request()->routeIs('admin.niveles.index')" wire:navigate>
+                        {{ __('Niveles') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -47,8 +53,7 @@ new class extends Component {
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
-                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-
+                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-800 hover:text-gray-200 focus:outline-none transition ease-in-out duration-150">
                             <span>Usuarios</span>
 
                             <div class="ms-1">
@@ -82,7 +87,6 @@ new class extends Component {
                         <x-dropdown-link :href="route('admin.alumnos.index')" wire:navigate>
                             {{ __('Alumnos') }}
                         </x-dropdown-link>
-
                     </x-slot>
                 </x-dropdown>
 
@@ -90,7 +94,7 @@ new class extends Component {
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
-                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-800 hover:text-gray-200 focus:outline-none transition ease-in-out duration-150">
                             <div x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name"
                                 x-on:profile-updated.window="name = $event.detail.name"></div>
 
@@ -142,11 +146,19 @@ new class extends Component {
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('admin.permisos.index')" :active="request()->routeIs('admin.permisos.index')" wire:navigate>
+                {{ __('Permisos') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('admin.niveles.index')" :active="request()->routeIs('admin.niveles.index')" wire:navigate>
+                {{ __('Niveles') }}
+            </x-responsive-nav-link>
         </div>
 
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">
-                <span class="font-medium text-base text-gray-800">Usuarios</span>
+                <span class="font-medium text-base text-white">Usuarios</span>
             </div>
 
             <div class="mt-3 space-y-1">
@@ -171,9 +183,9 @@ new class extends Component {
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">
-                <div class="font-medium text-base text-gray-800" x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name"
+                <div class="font-medium text-base text-white" x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name"
                     x-on:profile-updated.window="name = $event.detail.name"></div>
-                <div class="font-medium text-sm text-gray-500">{{ auth()->user()->email }}</div>
+                <div class="font-medium text-sm text-gray-50">{{ auth()->user()->email }}</div>
             </div>
 
             <div class="mt-3 space-y-1">

@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Coordinador\Usuarios\Profesores;
 
-use App\Livewire\Forms\Coordinador\Usuarios\ProfesoresForm;
+use App\Livewire\Forms\AdminCoordinador\Usuarios\ProfesoresForm;
 use Livewire\Component;
 
 class Create extends Component
