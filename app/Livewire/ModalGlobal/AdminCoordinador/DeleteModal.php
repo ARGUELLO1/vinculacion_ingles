@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Admin\Usuarios;
+namespace App\Livewire\ModalGlobal\AdminCoordinador;
 
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -18,11 +18,6 @@ class DeleteModal extends Component
 
     public function openModal($userId, $userType = null)
     {
-        Log::info('Evento recibido', [
-            'userId' => $userId,
-            'userType' => $userType
-        ]);
-
         // Si solo llega un array (el caso problemático), extraemos los valores
         if (is_array($userId) && isset($userId['userId'])) {
             $data = $userId;
@@ -42,12 +37,6 @@ class DeleteModal extends Component
             $this->userType = $userType;
             $this->userName = $user->{$userType}?->nombre_completo ?? $user->name;
             $this->isOpen = true;
-
-            Log::info('Modal abierto correctamente', [
-                'user_id' => $userId,
-                'user_type' => $userType,
-                'user_name' => $this->userName
-            ]);
         } else {
             Log::error('Usuario no encontrado', ['user_id' => $userId]);
         }
@@ -147,9 +136,8 @@ class DeleteModal extends Component
         $this->reset(['userToDelete', 'userName', 'userType']);
     }
 
-
     public function render()
     {
-        return view('livewire.admin.usuarios.delete-modal');
+        return view('livewire.modal-global.admin-coordinador.delete-modal');
     }
 }

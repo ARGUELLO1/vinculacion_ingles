@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Livewire\Forms\Admin\Usuarios;
+namespace App\Livewire\Forms\AdminCoordinador\Usuarios;
 
-use App\Models\Coordinador;
+use App\Models\Capturista;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
@@ -10,9 +10,9 @@ use Illuminate\Validation\Rules;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
 
-class CoordinadoresForm extends Form
+class CapturistasForm extends Form
 {
-    public ?Coordinador $coordinadorEdit = null;
+    public ?Capturista $capturistaEdit = null;
     public ?User $userEdit = null;
 
     #[Validate('required|string|max:255', as: 'Nombre del Coordinador')]
@@ -31,39 +31,39 @@ class CoordinadoresForm extends Form
     public string $password = '';
     public string $password_confirmation = '';
 
-    public $coordinadorName;
-    public $coordinadorID;
+    public $capturistaName;
+    public $capturistaID;
 
-    public function setCoordinador(Coordinador $coordinador)
+    public function setCapturista(Capturista $capturista)
     {
-        $this->coordinadorEdit = $coordinador;
-        $this->userEdit = $coordinador->user;
+        $this->capturistaEdit = $capturista;
+        $this->userEdit = $capturista->user;
 
-        $this->name = $coordinador->user->name;
-        $this->ap_paterno = $coordinador->ap_paterno;
-        $this->ap_materno = $coordinador->ap_materno;
-        $this->email = $coordinador->user->email;
+        $this->name = $capturista->user->name;
+        $this->ap_paterno = $capturista->ap_paterno;
+        $this->ap_materno = $capturista->ap_materno;
+        $this->email = $capturista->user->email;
     }
 
     public function store()
     {
         $this->validate([
-            'password' => [Rules\Password::defaults()],
+            'password' => [Rules\Password::defaults()]
         ]);
 
         $user = User::create([
             'name' => $this->name,
             'email' => $this->email,
-            'password' => Hash::make($this->password),
+            'password' => Hash::make($this->password)
         ]);
 
-        $user->assignRole('coordinador');
+        $user->assignRole('capturista');
 
-        $this->coordinadorName = Coordinador::create([
+        $this->capturistaName = Capturista::create([
             'user_id' => $user->id,
             'nombre' => $this->name,
             'ap_paterno' => $this->ap_paterno,
-            'ap_materno' => $this->ap_materno,
+            'ap_materno' => $this->ap_materno
         ]);
 
         event(new Registered($user));
@@ -72,6 +72,7 @@ class CoordinadoresForm extends Form
     public function update()
     {
         $this->validate([
+
             'name' => 'required|string|max:255',
             'email' => 'required|email|lowercase|max:255|unique:users,email,' . $this->userEdit->id,
             'ap_paterno' => 'required|string|max:255',
@@ -80,15 +81,15 @@ class CoordinadoresForm extends Form
 
         $this->userEdit->update([
             'name' => $this->name,
-            'email' => $this->email,
+            'email' => $this->email
         ]);
 
-        $this->coordinadorEdit->update([
+        $this->capturistaEdit->update([
             'nombre' => $this->name,
             'ap_paterno' => $this->ap_paterno,
-            'ap_materno' => $this->ap_materno,
+            'ap_materno' => $this->ap_materno
         ]);
 
-        $this->coordinadorID = $this->coordinadorEdit;
+        $this->capturistaID = $this->capturistaEdit;
     }
 }

@@ -13,11 +13,19 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js']) <!-- ✅ ESTA LÍNEA ES CRÍTICA -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100">
+    <!-- Imagen de fondo con blur -->
+    <div class="fixed inset-0 -z-10">
+        <img src="{{ asset('images/explanada.jpg') }}" alt="Background"
+            class="w-full h-full object-cover filter blur-sm">
+        <!-- Overlay para mejor legibilidad -->
+        <div class="absolute inset-0 bg-black/30"></div>
+    </div>
+
+    <div class="min-h-screen">
         <!-- Navegación dinámica según rol -->
         @auth
         @switch(auth()->user()->getRoleNames()->first())
@@ -25,6 +33,13 @@
         <livewire:layout.admin.navigation />
         @break
 
+                @case('coordinador')
+                    <livewire:layout.coordinador.navigation />
+                @break
+
+                @case('capturista')
+                    <livewire:layout.capturista.navigation />
+                @break
         @case('coordinador')
         <livewire:layout.coordinador.navigation />
         @break
@@ -33,16 +48,23 @@
         <livewire:layout.profesor.navigation />
         @break
 
+                @case('alumno')
+                    <livewire:layout.alumno.navigation />
+                @break
         @case('alumno')
         <livewire:layout.alumno.navigation />
         @break
 
         <!-- ... otros roles ... -->
 
+                @default
+                    <livewire:layouts.navigation />
+            @endswitch
         @default
         <livewire:layout.navigation />
         @endswitch
         @else
+            <livewire:layouts.navigation />
         <livewire:layout.navigation />
         @endauth
         <!-- Page Heading -->

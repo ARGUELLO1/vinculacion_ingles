@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Forms\Admin\Permisos;
+namespace App\Livewire\Forms\AdminCoordinador\Permisos;
 
 use App\Models\User;
 use Livewire\Attributes\Validate;
@@ -17,6 +17,7 @@ class PermisosForm extends Form
     public $groupNames = [
         'capturistas' => 'Permisos de Capturistas',
         'profesores' => 'Permisos de Profesores',
+        'alumnos' => 'Permisos de Alumno',
         'niveles' => 'Permisos de Niveles',
         'permisos' => 'Permisos del Sistema'
     ];
@@ -81,12 +82,12 @@ class PermisosForm extends Form
 
     /**
      * Lógica para manejar automáticamente los permisos .options
-     * Se asigna .options si tiene update o delete
-     * Se remueve .options si no tiene ni update ni delete
+     * Se asigna .options si tiene show, update o delete
+     * Se remueve .options si no tiene ninguno de estos
      */
     public function applyOptionsLogic()
     {
-        $groupsToProcess = ['capturistas', 'profesores', 'niveles', 'permisos'];
+        $groupsToProcess = ['capturistas', 'profesores', 'alumnos', 'niveles', 'permisos'];
 
         foreach ($groupsToProcess as $group) {
             $this->processGroupOptions($group);
@@ -95,22 +96,25 @@ class PermisosForm extends Form
 
     /**
      * Procesa la lógica de .options para un grupo específico
+     * MODIFICADO: Ahora incluye 'show' como permiso que activa .options
      */
     private function processGroupOptions($group)
     {
+        $hasShow = in_array("{$group}.show", $this->selectedPermissions);
         $hasUpdate = in_array("{$group}.update", $this->selectedPermissions);
         $hasDelete = in_array("{$group}.delete", $this->selectedPermissions);
         $hasOptions = in_array("{$group}.options", $this->selectedPermissions);
 
         $optionsPermission = "{$group}.options";
 
-        if (($hasUpdate || $hasDelete) && !$hasOptions) {
-            // Si tiene update o delete pero no tiene options, agregar options
+        // Si tiene show, update o delete, debe tener options
+        if (($hasShow || $hasUpdate || $hasDelete) && !$hasOptions) {
+            // Agregar options si no está presente
             if (!in_array($optionsPermission, $this->selectedPermissions)) {
                 $this->selectedPermissions[] = $optionsPermission;
             }
-        } elseif (!$hasUpdate && !$hasDelete && $hasOptions) {
-            // Si no tiene ni update ni delete pero tiene options, remover options
+        } elseif (!$hasShow && !$hasUpdate && !$hasDelete && $hasOptions) {
+            // Si no tiene show, update ni delete, remover options
             $this->selectedPermissions = array_filter(
                 $this->selectedPermissions,
                 fn($perm) => $perm !== $optionsPermission
@@ -171,7 +175,7 @@ class PermisosForm extends Form
             'create' => 'Crear',
             'update' => 'Editar',
             'delete' => 'Eliminar',
-            'show' => 'Ver detalle'
+            'show' => 'Ver detalle',
         ];
 
         foreach ($names as $key => $display) {
@@ -200,6 +204,27 @@ class PermisosForm extends Form
             $total += $group['permissions']->count();
         }
         return $total;
+    }
+
+    /**
+     * Método para contar solo los permisos seleccionados (excluyendo .options automáticos)
+     * para mostrar en el resumen
+     */
+    public function getSelectedPermissionsCountProperty()
+    {
+        $count = 0;
+        foreach ($this->permissionGroups as $groupKey => $group) {
+            foreach ($group['permissions'] as $permission) {
+                // Contar solo si no es un permiso .options
+                if (
+                    !str_contains($permission->name, '.options') &&
+                    in_array($permission->name, $this->selectedPermissions)
+                ) {
+                    $count++;
+                }
+            }
+        }
+        return $count;
     }
 
     /**

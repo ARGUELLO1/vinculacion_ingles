@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Coordinador\Usuarios\Capturistas;
 
-use App\Livewire\Forms\Coordinador\Usuarios\CapturistasForm;
+use App\Livewire\Forms\AdminCoordinador\Usuarios\CapturistasForm;
 use App\Models\Capturista;
 use Livewire\Component;
 

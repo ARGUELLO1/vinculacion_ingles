@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Admin\Permisos;
 
-use App\Livewire\Forms\Admin\Permisos\PermisosForm;
+use App\Livewire\Forms\AdminCoordinador\Permisos\PermisosForm;
 use App\Models\User;
 use Livewire\Component;
 
