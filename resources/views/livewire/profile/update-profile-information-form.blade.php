@@ -26,6 +26,8 @@ new class extends Component {
     public $rfc;
     public $estatus;
 
+    public $matricula;
+
     /**
      * Mount the component.
      */
@@ -93,6 +95,7 @@ new class extends Component {
                 if ($user->alumno) {
                     $this->ap_paterno = $user->alumno->ap_paterno ?? '';
                     $this->ap_materno = $user->alumno->ap_materno ?? '';
+                    $this->matricula =  $user->alumno->matricula;
                 }
                 break;
         }
@@ -104,27 +107,39 @@ new class extends Component {
     public function updateProfileInformation(): void
     {
         $user = Auth::user();
+        $mainRole = $user->getRoleNames()->first();
 
-        $validated = $this->validate([
+        // 🔹 Validaciones base para todos los roles
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'ap_paterno' => ['required', 'string', 'max:255'],
             'ap_materno' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
-            //profesor
-            // Datos del profesor
-            'edad' => ['nullable', 'integer', 'min:18', 'max:100'],
-            'sexo' => ['required', Rule::in(['M', 'F'])],
-            'rfc' => ['nullable', 'string', 'max:13'],
-            'codigo_postal' => ['nullable', 'digits:5'],
-            'municipio_id' => ['required', 'exists:municipios,id_municipio'],
-            'calle' => ['nullable', 'string', 'max:255'],
-            'numero' => ['nullable', 'string', 'max:20'],
-            'colonia' => ['nullable', 'string', 'max:255'],
-            'estado' => ['nullable', 'string', 'max:50'],
-            'estatus' => ['required', Rule::in(['activo', 'inactivo'])],
-        ]);
+        ];
 
-        // Actualizar los datos en la tabla users (email y name)
+        // 🔹 Agregar validaciones según el rol
+        if ($mainRole === 'profesor') {
+            $rules = array_merge($rules, [
+                'edad' => ['nullable', 'integer', 'min:18', 'max:100'],
+                'sexo' => ['required', Rule::in(['M', 'F'])],
+                'rfc' => ['nullable', 'string', 'max:13'],
+                'codigo_postal' => ['nullable', 'digits:5'],
+                'municipio_id' => ['required', 'exists:municipios,id_municipio'],
+                'calle' => ['nullable', 'string', 'max:255'],
+                'numero' => ['nullable', 'string', 'max:20'],
+                'colonia' => ['nullable', 'string', 'max:255'],
+                'estado' => ['nullable', 'string', 'max:50'],
+                'estatus' => ['required', Rule::in(['activo', 'inactivo'])],
+            ]);
+        } else if ($mainRole === 'alumno') {
+            $rules = array_merge($rules, [
+                'matricula' => ['nullable', 'string', 'max:10'],
+            ]);
+        }
+
+        $validated = $this->validate($rules);
+
+        // 🔹 Actualizar tabla users
         $user->fill([
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -136,7 +151,7 @@ new class extends Component {
 
         $user->save();
 
-        // Actualizar los datos específicos en la tabla correspondiente según el rol
+        // 🔹 Actualizar datos según el rol
         $this->updateUserSpecificData($user, $validated);
 
         $this->dispatch('profile-updated', name: $user->name);
@@ -213,6 +228,7 @@ new class extends Component {
                         'nombre' => $validated['name'],
                         'ap_paterno' => $validated['ap_paterno'],
                         'ap_materno' => $validated['ap_materno'],
+                        'matricula' => $this->matricula,
                     ]);
                 }
                 break;
@@ -397,6 +413,16 @@ new class extends Component {
         </div>
         @endif
 
+
+        {{-- 🔹 Campos extra SOLO si el usuario es ALUMNO --}}
+        @if(auth()->user()->hasRole('alumno'))
+             <div>
+                <x-input-label for="matricula" :value="__('Matricula')" />
+                <x-text-input wire:model="matricula" id="matricula" name="matricula" type="text"
+                    class="mt-1 block w-full" />
+                <x-input-error class="mt-2" :messages="$errors->get('matricula')" />
+            </div>       
+        @endif
         {{-- Botón guardar --}}
         <div class="flex items-center gap-4 mt-6">
             <x-primary-button>{{ __('Guardar Cambios') }}</x-primary-button>
