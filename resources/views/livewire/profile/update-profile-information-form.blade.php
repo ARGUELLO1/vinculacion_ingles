@@ -12,6 +12,20 @@ new class extends Component {
     public string $ap_materno = '';
     public string $email = '';
 
+    //profesor campos 
+
+    public $edad;
+    public $estado_civil_id;
+    public $sexo;
+    public $calle;
+    public $numero;
+    public $colonia;
+    public $codigo_postal;
+    public ?int $municipio_id = null;
+    public $estado;
+    public $rfc;
+    public $estatus;
+
     /**
      * Mount the component.
      */
@@ -60,6 +74,18 @@ new class extends Component {
                 if ($user->profesor) {
                     $this->ap_paterno = $user->profesor->ap_paterno ?? '';
                     $this->ap_materno = $user->profesor->ap_materno ?? '';
+                    $profesor = $user->profesor;
+                    $this->edad = $profesor->edad;
+                    $this->estado_civil_id = $profesor->estado_civil_id;
+                    $this->sexo = $profesor->sexo;
+                    $this->calle = $profesor->calle;
+                    $this->numero = $profesor->numero;
+                    $this->colonia = $profesor->colonia;
+                    $this->codigo_postal = $profesor->codigo_postal;
+                    $this->municipio_id = $profesor->municipio_id;
+                    $this->estado = $profesor->estado;
+                    $this->rfc = $profesor->rfc;
+                    $this->estatus = $profesor->estatus;
                 }
                 break;
 
@@ -84,6 +110,18 @@ new class extends Component {
             'ap_paterno' => ['required', 'string', 'max:255'],
             'ap_materno' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
+            //profesor
+            // Datos del profesor
+            'edad' => ['nullable', 'integer', 'min:18', 'max:100'],
+            'sexo' => ['required', Rule::in(['M', 'F'])],
+            'rfc' => ['nullable', 'string', 'max:13'],
+            'codigo_postal' => ['nullable', 'digits:5'],
+            'municipio_id' => ['required', 'exists:municipios,id_municipio'],
+            'calle' => ['nullable', 'string', 'max:255'],
+            'numero' => ['nullable', 'string', 'max:20'],
+            'colonia' => ['nullable', 'string', 'max:255'],
+            'estado' => ['nullable', 'string', 'max:50'],
+            'estatus' => ['required', Rule::in(['activo', 'inactivo'])],
         ]);
 
         // Actualizar los datos en la tabla users (email y name)
@@ -153,6 +191,17 @@ new class extends Component {
                         'nombre' => $validated['name'],
                         'ap_paterno' => $validated['ap_paterno'],
                         'ap_materno' => $validated['ap_materno'],
+                        'edad' => $this->edad,
+                        'estado_civil_id' => $this->estado_civil_id,
+                        'sexo' => $this->sexo,
+                        'calle' => $this->calle,
+                        'numero' => $this->numero,
+                        'colonia' => $this->colonia,
+                        'codigo_postal' => $this->codigo_postal,
+                        'municipio_id' => $this->municipio_id,
+                        'estado' => $this->estado,
+                        'rfc' => $this->rfc,
+                        'estatus' => $this->estatus ?? 'activo',
                     ]);
                 }
                 break;
@@ -188,71 +237,171 @@ new class extends Component {
         Session::flash('status', 'verification-link-sent');
     }
 }; ?>
-
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Profile Information') }}
+            {{ __('Información del Perfil') }}
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
-            {{ __("Update your account's profile information and email address.") }}
+            {{ __("Actualiza tu información personal y dirección de correo electrónico.") }}
         </p>
     </header>
 
     <form wire:submit="updateProfileInformation" class="mt-6 space-y-6">
+        {{-- Nombre --}}
         <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input wire:model="name" id="name" name="name" type="text" class="mt-1 block w-full" required
-                autofocus autocomplete="name" />
+            <x-input-label for="name" :value="__('Nombre')" />
+            <x-text-input wire:model="name" id="name" name="name" type="text"
+                class="mt-1 block w-full" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
+        {{-- Apellido paterno --}}
         <div>
             <x-input-label for="ap_paterno" :value="__('Apellido Paterno')" />
             <x-text-input wire:model="ap_paterno" id="ap_paterno" name="ap_paterno" type="text"
-                class="mt-1 block w-full" required autofocus autocomplete="ap_paterno" />
+                class="mt-1 block w-full" required autocomplete="ap_paterno" />
             <x-input-error class="mt-2" :messages="$errors->get('ap_paterno')" />
         </div>
 
+        {{-- Apellido materno --}}
         <div>
             <x-input-label for="ap_materno" :value="__('Apellido Materno')" />
             <x-text-input wire:model="ap_materno" id="ap_materno" name="ap_materno" type="text"
-                class="mt-1 block w-full" required autofocus autocomplete="ap_materno" />
+                class="mt-1 block w-full" required autocomplete="ap_materno" />
             <x-input-error class="mt-2" :messages="$errors->get('ap_materno')" />
         </div>
 
+        {{-- Email --}}
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="email" id="email" name="email" type="email" class="mt-1 block w-full"
-                required autocomplete="username" />
+            <x-input-label for="email" :value="__('Correo Electrónico')" />
+            <x-text-input wire:model="email" id="email" name="email" type="email"
+                class="mt-1 block w-full" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
             @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !auth()->user()->hasVerifiedEmail())
-                <div>
-                    <p class="text-sm mt-2 text-gray-800">
-                        {{ __('Your email address is unverified.') }}
+            <div>
+                <p class="text-sm mt-2 text-gray-800">
+                    {{ __('Tu dirección de correo no está verificada.') }}
+                    <button wire:click.prevent="sendVerification"
+                        class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        {{ __('Haz clic aquí para reenviar el correo de verificación.') }}
+                    </button>
+                </p>
 
-                        <button wire:click.prevent="sendVerification"
-                            class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            {{ __('Click here to re-send the verification email.') }}
-                        </button>
-                    </p>
-
-                    @if (session('status') === 'verification-link-sent')
-                        <p class="mt-2 font-medium text-sm text-green-600">
-                            {{ __('A new verification link has been sent to your email address.') }}
-                        </p>
-                    @endif
-                </div>
+                @if (session('status') === 'verification-link-sent')
+                <p class="mt-2 font-medium text-sm text-green-600">
+                    {{ __('Se ha enviado un nuevo enlace de verificación a tu correo.') }}
+                </p>
+                @endif
+            </div>
             @endif
         </div>
 
-        <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+        {{-- 🔹 Campos extra SOLO si el usuario es profesor --}}
+        @if(auth()->user()->hasRole('profesor'))
+        <hr class="my-6 border-gray-300">
+        <h3 class="text-lg font-semibold text-gray-800">Información adicional del profesor</h3>
 
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <div>
+                <x-input-label for="edad" :value="__('Edad')" />
+                <x-text-input wire:model="edad" id="edad" name="edad" type="number"
+                    class="mt-1 block w-full" />
+                <x-input-error class="mt-2" :messages="$errors->get('edad')" />
+            </div>
+
+            <div>
+                <x-input-label for="sexo" :value="__('Sexo')" />
+                <select wire:model="sexo" id="sexo" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                    <option value="">Seleccione...</option>
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                </select>
+                <x-input-error class="mt-2" :messages="$errors->get('sexo')" />
+            </div>
+
+            <div>
+                <x-input-label for="rfc" :value="__('RFC')" />
+                <x-text-input wire:model="rfc" id="rfc" name="rfc" type="text"
+                    class="mt-1 block w-full" />
+                <x-input-error class="mt-2" :messages="$errors->get('rfc')" />
+            </div>
+
+            <div>
+                <x-input-label for="estado_civil_id" :value="__('Estado Civil')" />
+                <select wire:model="estado_civil_id" id="estado_civil_id"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <option value="">Seleccione...</option>
+                    @foreach(\App\Models\EstadoCivil::all() as $estadoCivil)
+                    <option value="{{ $estadoCivil->id_estado_civil }}">{{ $estadoCivil->tipo_estado_civil }}</option>
+                    @endforeach
+                </select>
+                <x-input-error class="mt-2" :messages="$errors->get('estado_civil_id')" />
+            </div>
+
+            <div class="md:col-span-2">
+                <x-input-label for="calle" :value="__('Calle')" />
+                <x-text-input wire:model="calle" id="calle" name="calle" type="text"
+                    class="mt-1 block w-full" />
+                <x-input-error class="mt-2" :messages="$errors->get('calle')" />
+            </div>
+
+            <div>
+                <x-input-label for="numero" :value="__('Número')" />
+                <x-text-input wire:model="numero" id="numero" name="numero" type="text"
+                    class="mt-1 block w-full" />
+                <x-input-error class="mt-2" :messages="$errors->get('numero')" />
+            </div>
+
+            <div>
+                <x-input-label for="colonia" :value="__('Colonia')" />
+                <x-text-input wire:model="colonia" id="colonia" name="colonia" type="text"
+                    class="mt-1 block w-full" />
+                <x-input-error class="mt-2" :messages="$errors->get('colonia')" />
+            </div>
+
+            <div>
+                <x-input-label for="codigo_postal" :value="__('Código Postal')" />
+                <x-text-input wire:model="codigo_postal" id="codigo_postal" name="codigo_postal" type="text"
+                    maxlength="5" class="mt-1 block w-full" />
+                <x-input-error class="mt-2" :messages="$errors->get('codigo_postal')" />
+            </div>
+
+            <div>
+                <x-input-label for="estado" :value="__('Estado')" />
+                <x-text-input wire:model="estado" id="estado" name="estado" type="text"
+                    class="mt-1 block w-full" />
+                <x-input-error class="mt-2" :messages="$errors->get('estado')" />
+            </div>
+            <div>
+                <x-input-label for="municipio_id" :value="__('Municipio')" />
+                <select wire:model="municipio_id" id="municipio_id" name="municipio_id"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <option value="">Selecciona un municipio</option>
+                    @foreach(\App\Models\Municipio::all() as $municipio)
+                    <option value="{{ $municipio->id_municipio }}">{{ $municipio->nombre_municipio }}</option>
+                    @endforeach
+                </select>
+                <x-input-error class="mt-2" :messages="$errors->get('municipio_id')" />
+            </div>
+            <div>
+                <x-input-label for="estatus" :value="__('Estatus')" />
+                <select wire:model="estatus" id="estatus" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                    <option value="activo">Activo</option>
+                    <option value="inactivo">Inactivo</option>
+                </select>
+                <x-input-error class="mt-2" :messages="$errors->get('estatus')" />
+            </div>
+        </div>
+        @endif
+
+        {{-- Botón guardar --}}
+        <div class="flex items-center gap-4 mt-6">
+            <x-primary-button>{{ __('Guardar Cambios') }}</x-primary-button>
             <x-action-message class="me-3" on="profile-updated">
-                {{ __('Saved.') }}
+                {{ __('Guardado.') }}
             </x-action-message>
         </div>
     </form>

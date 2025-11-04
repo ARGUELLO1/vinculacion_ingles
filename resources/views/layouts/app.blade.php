@@ -20,39 +20,38 @@
     <div class="min-h-screen bg-gray-100">
         <!-- Navegación dinámica según rol -->
         @auth
-            @switch(auth()->user()->getRoleNames()->first())
-                @case('admin')
-                    <livewire:layout.admin.navigation />
-                @break
+        @switch(auth()->user()->getRoleNames()->first())
+        @case('admin')
+        <livewire:layout.admin.navigation />
+        @break
 
-                @case('coordinador')
-                    <livewire:layout.coordinador.navigation />
-                @break
+        @case('coordinador')
+        <livewire:layout.coordinador.navigation />
+        @break
 
-                @case('profesor')
-                    <livewire:layout.profesor.navigation />
-                @break
+        @case('profesor')
+        <livewire:layout.profesor.navigation />
+        @break
 
-                @case('alumno')
-                    <livewire:layout.alumno.navigation />
-                @break
+        @case('alumno')
+        <livewire:layout.alumno.navigation />
+        @break
 
-                <!-- ... otros roles ... -->
+        <!-- ... otros roles ... -->
 
-                @default
-                    <livewire:layout.navigation />
-            @endswitch
+        @default
+        <livewire:layout.navigation />
+        @endswitch
         @else
-            <livewire:layout.navigation />
+        <livewire:layout.navigation />
         @endauth
-
         <!-- Page Heading -->
         @if (isset($header))
-            <header class="bg-white shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
-                </div>
-            </header>
+        <header class="bg-[#1b396b] shadow-none w-full">
+            <div class="py-6 px-4 sm:px-6 lg:px-8  text-white font-bold text-xl">
+                {{ $header }}
+            </div>
+        </header>
         @endif
 
         <!-- Page Content -->

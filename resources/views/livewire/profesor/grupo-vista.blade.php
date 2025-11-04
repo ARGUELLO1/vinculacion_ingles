@@ -1,4 +1,9 @@
 <div>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-white leading-tight">
+          GRUPO - {{ $grupo->nombre_grupo }} - SELECCIONADO
+        </h2>
+    </x-slot>
     {{-- BLOQUE DE ALERTAS (Toast Notifications) --}}
     {{-- ¡Actualizado para manejar 'success' y 'error'! --}}
     <div
