@@ -55,9 +55,8 @@ class Nivel extends Model
     {
         return $this->hasMany(DocumentoProfesor::class, 'nivel_id');
     }
-
-    public function modalidad(): BelongsTo
+    public function modalidad()
     {
-        return $this->belongsTo(Modalidad::class, 'modalidad_id');
+        return $this->belongsTo(Modalidad::class, 'modalidad_id', 'id_modalidad');
     }
 }

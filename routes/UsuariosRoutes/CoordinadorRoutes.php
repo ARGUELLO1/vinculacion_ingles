@@ -13,6 +13,9 @@ use App\Livewire\Coordinador\Usuarios\Profesores\Index as CoordinadorProfesoresI
 use App\Livewire\Coordinador\Usuarios\Profesores\Create as CoordinadorProfesoresCreate;
 use App\Livewire\Coordinador\Usuarios\Profesores\Update as CoordinadorProfesoresUpdate;
 use App\Livewire\Coordinador\Usuarios\Alumnos\Index as CoordinadorAlumnosIndex;
+use App\Livewire\Coordinador\Niveles\Index as CoordinadorNivelesIndex;
+use App\Livewire\Coordinador\Niveles\Create as CoordinadorNivelesCreate;
+use App\Livewire\Coordinador\Niveles\Update as CoordinadorNivelesUpdate;
 
 Route::prefix('coordinador')->middleware(['role:coordinador'])->group(function () {
     //Dashboard principal del Coordinador
@@ -34,4 +37,9 @@ Route::prefix('coordinador')->middleware(['role:coordinador'])->group(function (
 
     //Logica sobre Alumnos
     Route::get('/alumnos', CoordinadorAlumnosIndex::class)->name('coordinador.alumnos.index');
+
+    //Logica sobre Niveles
+    Route::get('/niveles', CoordinadorNivelesIndex::class)->name('coordinador.niveles.index');
+    Route::get('/niveles/create', CoordinadorNivelesCreate::class)->name('coordinador.niveles.create');
+    Route::get('/niveles/{nivel}/edit', CoordinadorNivelesUpdate::class)->name('coordinador.niveles.edit');
 });

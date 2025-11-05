@@ -115,7 +115,7 @@
         </div>
     </div>
 
-    <livewire:admin.usuarios.delete-modal />
+    <livewire:modal-global.admin-coordinador.delete-modal />
 
     <!-- Sistema de Notificaciones Automáticas -->
     @if (session('success'))

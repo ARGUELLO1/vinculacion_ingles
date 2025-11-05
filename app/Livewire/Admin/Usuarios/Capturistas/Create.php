@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Admin\Usuarios\Capturistas;
 
-use App\Livewire\Forms\Admin\Usuarios\CapturistasForm;
+use App\Livewire\Forms\AdminCoordinador\Usuarios\CapturistasForm;
 use Livewire\Component;
 
 class Create extends Component

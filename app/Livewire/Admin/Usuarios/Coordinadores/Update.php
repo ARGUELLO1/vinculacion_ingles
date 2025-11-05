@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Admin\Usuarios\Coordinadores;
 
-use App\Livewire\Forms\Admin\Usuarios\CoordinadoresForm;
+use App\Livewire\Forms\AdminCoordinador\Usuarios\CoordinadoresForm;
 use App\Models\Coordinador;
 use Livewire\Component;
 

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\Admin\Dashboard as DashboardAdmin;
 use App\Livewire\Admin\Permisos\Index as AdminPermisosIndex;
 use App\Livewire\Admin\Permisos\Create as AdminPermisosCreate;
+use App\Livewire\Admin\Niveles\Index as AdminNivelesIndex;
 use App\Livewire\Admin\Usuarios\Capturistas\Index as AdminCapturistasIndex;
 use App\Livewire\Admin\Usuarios\Capturistas\Create as AdminCapturistasCreate;
 use App\Livewire\Admin\Usuarios\Capturistas\Update as AdminCapturistasUpdate;
@@ -24,6 +25,9 @@ Route::prefix('admin')->middleware(['role:admin'])->group(function () {
     //Logica sobre Permisos
     Route::get('/permisos', AdminPermisosIndex::class)->name('admin.permisos.index');
     Route::get('/permisos/{usuario}/edit', AdminPermisosCreate::class)->name('admin.permisos.create');
+
+    //Logica sobre Niveles
+    Route::get('/niveles', AdminNivelesIndex::class)->name('admin.niveles.index');
 
     //Logica sobre Coordinadores
     Route::get('/coordinadores', AdminCoordinadoresIndex::class)->name('admin.coordinadores.index');
