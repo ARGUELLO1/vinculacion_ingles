@@ -15,12 +15,18 @@
             <th>AULA</th>
         </tr>
         <tr>
-            <td>{{ $info_alumno->nivel->nombre_grupo }}</td>
-            <td>{{ $info_alumno->nivel->nivel }}</td>
-            <td>{{ $info_alumno->nivel->profesor->nombre }} {{ $info_alumno->nivel->profesor->ap_materno }}</td>
-            <td>{{ $info_alumno->nivel->horario }}</td>
-            <td>{{ $info_alumno->nivel->periodo->periodo }}</td>
-            <td>{{ $info_alumno->nivel->aula }}</td>
+            @if ($info_alumno->nivel)
+                <td>{{ $info_alumno->nivel->nombre_grupo }}</td>
+                <td>{{ $info_alumno->nivel->nivel }}</td>
+                <td>{{ $info_alumno->nivel->modalidad->tipo_modalidad }}</td>
+                <td>{{ $info_alumno->nivel->profesor->nombre }} {{ $info_alumno->nivel->profesor->ap_materno }}</td>
+                <td>{{ $info_alumno->nivel->horario }}</td>
+                <td>{{ $info_alumno->nivel->periodo->periodo }}</td>
+                <td>{{ $info_alumno->nivel->aula }}</td>
+            @else
+                <h1>NO ESTAS INSCRITO EN ALGÚN NIVEL</h1>
+            @endif
+
         </tr>
 
     </table>

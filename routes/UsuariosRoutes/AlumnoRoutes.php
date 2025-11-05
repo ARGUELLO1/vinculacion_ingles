@@ -1,12 +1,24 @@
 <?php
 
+use App\Livewire\Alumno\Carterm;
 use Illuminate\Support\Facades\Route;
 
 
 use App\Livewire\Alumno\Dashboard as AlumnoDashboard;
+use App\Livewire\Alumno\Infoalumno;
+use App\Livewire\Alumno\Inscribirse;
+use App\Livewire\Alumno\Principal;
+use App\Livewire\Alumno\Reinscribirse;
 
-Route::middleware(['auth', 'role:alumno'])->group(function () {
-    Route::get('/Alumno/dashboard', AlumnoDashboard::class)->name('Alumno.dashboard');
+Route::prefix('alumno')->name('Alumno.')->middleware(['auth', 'role:alumno'])->group(function () {
+    Route::get('/Alumno/dashboard', AlumnoDashboard::class)->name('dashboard');
+    Route::get('/principal', Principal::class)->name('principal');
+    Route::get('/inscribirse', Inscribirse::class)->name('inscribirse');
+    Route::get('/reinscribirse', Reinscribirse::class)->name('reinscribirse');
+    Route::get('/cartas_de_termino', Carterm::class)->name('carterm');
+    Route::get('/informacion_del_alumno', Infoalumno::class)->name('infoalumno');
 
     // aquí luego puedes agregar más rutas del alumno, p.ej huevos al arguello xd.
 });
+
+

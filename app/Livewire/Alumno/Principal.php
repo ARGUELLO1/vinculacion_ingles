@@ -9,8 +9,8 @@ use Livewire\Component;
 class Principal extends Component
 {
     //INFORMACIÓN DEL ALUMNO
-    public $info_alumno;
-    public $info_grupo;
+    public $info_alumno ;
+    public $info_grupo = [];
 
     
     public function mount()

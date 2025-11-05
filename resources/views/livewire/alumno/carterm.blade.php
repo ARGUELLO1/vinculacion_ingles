@@ -1,3 +1,3 @@
 <div>
-    {{-- Success is as dangerous as failure. --}}
+    <h1>MOSTRAR CARTAS DE TERMINO</h1>
 </div>

@@ -26,7 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         $user = auth()->user();
         $mainRole = $user->getRoleNames()->first();
-        
+
         return match (strtolower($mainRole)) {
             'admin' => redirect()->route('admin.dashboard'),
             'coordinador' => redirect()->route('coordinador.dashboard'),
@@ -43,8 +43,8 @@ Route::middleware('auth')->group(function () {
 
     //pdf profesor
     Route::get('/grupo/{grupo}/reporte-pdf/{parcial?}', [ExportController::class, 'exportarReportePDF'])
-    ->name('exportar.reporte')
-    ->where('parcial', '[1-3]');
+        ->name('exportar.reporte')
+        ->where('parcial', '[1-3]');
 
     // Rutas de Perfil (Comunes para todos los roles)
     Route::view('profile', 'profile')->name('profile');
@@ -61,17 +61,10 @@ Route::middleware('auth')->group(function () {
     //Profesor
     require __DIR__ . '/UsuariosRoutes/ProfesorRoutes.php';
 
-        //Logica sobre Alumnos
-        Route::get('/alomnos', AlumnosIndex::class)->name('admin.alumnos.index');
+    //Logica sobre Alumnos
+    Route::get('/alomnos', AlumnosIndex::class)->name('admin.alumnos.index');
 
 
-    Route::prefix('alumno')->name('alumno.')->middleware(['role:alumno'])->group(function () {
-        Route::get('/principal', Principal::class)->name('principal');
-        Route::get('/inscribirse', Inscribirse::class)->name('inscribirse');
-        Route::get('/reinscribirse', Reinscribirse::class)->name('reinscribirse');
-        Route::get('/cartas_de_termino', Carterm::class)->name('carterm');
-        Route::get('/informacion_del_alumno', Infoalumno::class)->name('infoalumno');
-    });
     //Alumno
     require __DIR__ . '/UsuariosRoutes/AlumnoRoutes.php';
 });
