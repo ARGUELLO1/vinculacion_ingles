@@ -1,8 +1,8 @@
 <div>
 
-    <div class="">
+    <div class="bg-white shadow rounded-lg p-6">
         @if ($info_alumno->nivel_id)
-            <h1>Ya estas inscrito a un nivel</h1>
+            <h1>YA ESTAS INSCRITO A UN NIVEL</h1>
         @else
             <h1>INSCRIBIRSE</h1>
             <form wire:submit="save" enctype="multipart/form-data">

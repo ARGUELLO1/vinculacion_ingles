@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\DocumentoController;
+use App\Livewire\Alumno\Calificaciones;
 use App\Livewire\Alumno\Carterm;
 use Illuminate\Support\Facades\Route;
 
@@ -16,7 +18,9 @@ Route::prefix('alumno')->name('Alumno.')->middleware(['auth', 'role:alumno'])->g
     Route::get('/inscribirse', Inscribirse::class)->name('inscribirse');
     Route::get('/reinscribirse', Reinscribirse::class)->name('reinscribirse');
     Route::get('/cartas_de_termino', Carterm::class)->name('carterm');
-    Route::get('/informacion_del_alumno', Infoalumno::class)->name('infoalumno');
+    Route::get('/calificaciones', Calificaciones::class)->name('calificaciones');
+    Route::get('/descargar/{id_grupo}/{grupo}/{archivo}', [DocumentoController::class, 'descargar'])->name('documento.descargar');
+
 
     // aquí luego puedes agregar más rutas del alumno, p.ej huevos al arguello xd.
 });

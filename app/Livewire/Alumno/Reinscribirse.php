@@ -7,6 +7,7 @@ use App\Models\DocumentoExpediente;
 use App\Models\DocumentoNivel;
 use App\Models\Expediente;
 use App\Models\Nivel;
+use App\Models\Nota;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -61,7 +62,7 @@ class Reinscribirse extends Component
             $grupo->cantidad_alumnos = Alumno::where("nivel_id", $grupo->id_nivel)->count();
         }
     }
-    
+
     //Bloquea el input de seleccionar nivel (Se realizó por que hay un error con el id_nivel al dar libertad de cambiar niveles)
     public function updatedInfoFormularioGrupoCursar($value)
     {
@@ -78,6 +79,15 @@ class Reinscribirse extends Component
         $inscripcion_alumno = Alumno::find($this->info_alumno->id_alumno);
         $inscripcion_alumno->nivel_id = $this->info_formulario['grupo_cursar'];
         $inscripcion_alumno->update();
+
+        //Se crea el registro para las calificaciones
+        $calificacion = new Nota();
+        $calificacion->alumno_id = $inscripcion_alumno->id_alumno;
+        $calificacion->nivel_id = $this->info_formulario['grupo_cursar'];
+        $calificacion->nota_parcial_1 = 0;
+        $calificacion->nota_parcial_2 = 0;
+        $calificacion->nota_parcial_3 = 0;
+        $calificacion->save();
 
         $nivel = Nivel::find($this->info_formulario['grupo_cursar']);
         //Creamos la carpeta del alumno con la id alumno y dentro creamos una carpeta colocando el id_nivel como nombre
@@ -111,8 +121,7 @@ class Reinscribirse extends Component
                 $ruta_guardado = $archivo->storeAs($ruta_expediente, $nombreArchivo, 'local');
 
                 $documentos_expediente = new DocumentoExpediente();
-                //Cuando se agreguen las migraciones cambiar a = $expediente->id_expediente;
-                $documentos_expediente->nivel_id = $this->info_formulario['grupo_cursar'];
+                $documentos_expediente->id_expediente = $expediente->id_expediente;
                 $documentos_expediente->tipo_doc = $tipo_doc;
                 $documentos_expediente->ruta_doc = $ruta_guardado;
                 $documentos_expediente->save();

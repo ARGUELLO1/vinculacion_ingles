@@ -6,6 +6,7 @@ use App\Models\Alumno;
 use App\Models\DocumentoExpediente;
 use App\Models\Expediente;
 use App\Models\Nivel;
+use App\Models\Nota;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -81,6 +82,16 @@ class Inscribirse extends Component
 
         $nivel = Nivel::find($this->info_formulario['grupo_cursar']);
 
+        //Se crea el registro para las calificaciones
+        $calificacion = new Nota();
+        $calificacion->alumno_id = $inscripcion_alumno->id_alumno;
+        $calificacion->nivel_id = $this->info_formulario['grupo_cursar'];
+        $calificacion->nota_parcial_1 = 0;
+        $calificacion->nota_parcial_2 = 0;
+        $calificacion->nota_parcial_3 = 0;
+        $calificacion->save();
+
+
         //Creamos la carpeta del alumno con la id alumno y dentro creamos una carpeta colocando el id_nivel como nombre
         $ruta_expediente = "expedientes_alumno/" . $this->info_alumno->id_alumno . "_" . $this->info_alumno->matricula . "/" . $this->info_formulario['grupo_cursar'] . "_" . $nivel->nombre_grupo;
         // Creamos la carpeta
@@ -110,8 +121,7 @@ class Inscribirse extends Component
                 $ruta_guardado = $archivo->storeAs($ruta_expediente, $nombreArchivo, 'local');
 
                 $documentos_expediente = new DocumentoExpediente();
-                //Cuando se agreguen las migraciones cambiar a = $expediente->id_expediente;
-                $documentos_expediente->nivel_id = $this->info_formulario['grupo_cursar'];
+                $documentos_expediente->id_expediente = $expediente->id_expediente;
                 $documentos_expediente->tipo_doc = $tipo_doc;
                 $documentos_expediente->ruta_doc = $ruta_guardado;
                 $documentos_expediente->save();
