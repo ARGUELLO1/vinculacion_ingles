@@ -27,6 +27,8 @@ class Alumno extends Model
         'user_id',
         'expediente_id',
         'nota_id',
+        'colonia',
+        'municipio_id'
     ];
 
     protected $casts = [
