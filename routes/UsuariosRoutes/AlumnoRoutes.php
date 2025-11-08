@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\Alumno\Dashboard as AlumnoDashboard;
 use App\Livewire\Alumno\Infoalumno;
 use App\Livewire\Alumno\Inscribirse;
+use App\Livewire\Alumno\NivelesAnteriores;
 use App\Livewire\Alumno\Principal;
 use App\Livewire\Alumno\Reinscribirse;
 
@@ -18,7 +19,7 @@ Route::prefix('alumno')->name('Alumno.')->middleware(['auth', 'role:alumno'])->g
     Route::get('/inscribirse', Inscribirse::class)->name('inscribirse');
     Route::get('/reinscribirse', Reinscribirse::class)->name('reinscribirse');
     Route::get('/cartas_de_termino', Carterm::class)->name('carterm');
-    Route::get('/calificaciones', Calificaciones::class)->name('calificaciones');
+    Route::get('/nivelesanteriores', NivelesAnteriores::class)->name('nivelesanteriores');
     Route::get('/descargar/{id_grupo}/{grupo}/{archivo}', [DocumentoController::class, 'descargar'])->name('documento.descargar');
 
 

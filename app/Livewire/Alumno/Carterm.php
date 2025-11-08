@@ -17,16 +17,16 @@ class Carterm extends Component
     public function mount()
     {
         $this->datos_alumno = Auth::user()->alumno;
+        if ($this->datos_alumno->nivel_id) {
+            //Sacar los datos de los documentos para ver si hay documentos o todavía no
+            $this->carta_documento = DocumentoNivel::where('nivel_id', $this->datos_alumno->nivel->id_nivel)->first();
 
-        //Sacar los datos de los documentos para ver si hay documentos o todavía no
-        $this->carta_documento = DocumentoNivel::where('nivel_id', $this->datos_alumno->nivel->id_nivel)->first();
-
-        //Ruta de la carpeta en donde estan las cartas de termino
-        $this->carta_documento->ruta_doc;
-
-        //obtenemos el nombre de todos los archivos que existen en esa carpeta
-        $this->archivos = Storage::files($this->carta_documento->ruta_doc);
-
+            //Ruta de la carpeta en donde estan las cartas de termino
+            if ($this->carta_documento) {
+                //obtenemos el nombre de todos los archivos que existen en esa carpeta
+                $this->archivos = Storage::files($this->carta_documento->ruta_doc);
+            }
+        } 
     }
 
 

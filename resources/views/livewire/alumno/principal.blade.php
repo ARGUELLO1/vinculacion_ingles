@@ -30,7 +30,7 @@
                     <td>{{ $info_alumno->nivel->aula }}</td>
                 </tr>
             </table>
-            @if ($info_alumno->notas)
+            @if ($info_alumno->notas && $nota->nota_parcial_1!=0)
                 <table>
                     <tr>
                         <th colspan="4">CALIFICACIONES DEL PARCIAL</th>
@@ -42,9 +42,9 @@
                         <td>TOTAL</td>
                     </tr>
                     <tr>
-                        <td>{{ $nota->nota_parcial_1 }}</td>
-                        <td>{{ $nota->nota_parcial_2 }}</td>
-                        <td>{{ $nota->nota_parcial_3 }}</td>
+                        <td>{{ $nota->nota_parcial_1 == 0 ? 'PENDIENTE' :  $nota->nota_parcial_1}}</td>
+                        <td>{{ $nota->nota_parcial_2 == 0 ? 'PENDIENTE' :  $nota->nota_parcial_2}}</td>
+                        <td>{{ $nota->nota_parcial_3 == 0 ? 'PENDIENTE' :  $nota->nota_parcial_3}}</td>
                         <td>{{ number_format($nota->promedio, 2) }}</td>
                     </tr>
                 </table>

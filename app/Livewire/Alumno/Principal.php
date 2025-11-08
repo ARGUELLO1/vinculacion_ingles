@@ -18,8 +18,10 @@ class Principal extends Component
     public function mount()
     {
         $this->info_alumno = Auth::user()->alumno;
-        $this->nota=Nota::where('nivel_id',$this->info_alumno->nivel->id_nivel)->where('alumno_id',$this->info_alumno->id_alumno)->first();
-  
+
+        if ($this->info_alumno->nivel_id) {
+            $this->nota = Nota::where('nivel_id', $this->info_alumno->nivel->id_nivel)->where('alumno_id', $this->info_alumno->id_alumno)->first();
+        }
     }
 
     public function render()

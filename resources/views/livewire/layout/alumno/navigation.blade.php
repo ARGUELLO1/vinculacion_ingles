@@ -45,8 +45,8 @@ new class extends Component {
                         {{ __('CARTAS DE TERMINO') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('Alumno.calificaciones')" :active="request()->routeIs('Alumno.calificaciones')" wire:navigate>
-                        {{ __('CALIFICACIONES') }}
+                    <x-nav-link :href="route('Alumno.nivelesanteriores')" :active="request()->routeIs('Alumno.nivelesanteriores')" wire:navigate>
+                        {{ __('NIVELES FINALIZADOS') }}
                     </x-nav-link>
                 </div>
             </div>

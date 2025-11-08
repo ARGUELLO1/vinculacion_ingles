@@ -1,6 +1,6 @@
 <div>
     <div class="bg-white shadow rounded-lg p-6">
-        @if (!$carta_documento->ruta_doc)
+        @if (!$carta_documento)
             <h1>AQUI SE MOSTRARAN LAS CARTAS DE TERMINO CUANDO SE SUBAN AL SISTEMA</h1>
         @else
             <h1>CARTAS DISPONIBLES</h1>
