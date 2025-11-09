@@ -1,7 +1,7 @@
 <div>
 
     <div class="bg-white shadow rounded-lg p-6">
-        @if ($info_alumno->nivel_id)
+        @if ($info_formulario->info_alumno->nivel_id)
             <h1>YA ESTAS INSCRITO A UN NIVEL</h1>
         @else
             <h1>INSCRIBIRSE</h1>
@@ -12,15 +12,18 @@
                 <input type="text" name="lin_captura" id="lin_captura" placeholder="XXXXXX(6) XXXXXX XXXXXX XXXXXX XXX"
                     maxlength="31" oninput="formatInput(event)" pattern="[0-9\s]+" title="SOLO SE ADMITEN NÚMEROS"
                     wire:model="info_formulario.linea_captura">
+                <x-input-error-rule for="info_formulario.linea_captura" />
 
 
 
 
                 <label for="fe_pago">FECHA DE PAGO</label>
                 <input type="date" name="fe_pago" id="fe_pago" wire:model="info_formulario.fecha_pago">
+                <x-input-error-rule for="info_formulario.fecha_pago" />
 
                 <label for="fe_entrega">FECHA DE ENTREGA</label>
                 <input type="date" name="fe_entrega" id="fe_entrega" wire:model="info_formulario.fecha_entrega">
+                <x-input-error-rule for="info_formulario.fecha_entrega" />
 
                 <label for="nivel">NIVEL A CURSAR</label>
                 <select name="nivel" wire:model.live="info_formulario.nivel_cursar" wire:loading.attr="disabled"
@@ -33,12 +36,13 @@
                     <option value='5'>NIVEL 5</option>
                     <option value='6'>NIVEL 6</option>
                 </select>
+                <x-input-error-rule for="info_formulario.nivel_cursar" />
 
                 <label for="selec_grupo">GRUPO</label>
                 <select name="selec_grupo" wire:model.live="info_formulario.grupo_cursar" wire:loading.attr="disabled">
 
 
-                    @forelse ($grupos as $grupo)
+                    @forelse ($info_formulario->grupos as $grupo)
                         @if ($grupo->cantidad_alumnos >= $grupo->cupo_max)
                             <option disabled value="{{ $grupo->id_nivel }}">
                                 Grupo: {{ $grupo->nombre_grupo }} -
@@ -60,52 +64,49 @@
                     @endforelse
                     <option value="" disabled selected>Selecciona un grupo...</option>
                 </select>
-
-
-
-
-
-
-
-
+                <x-input-error-rule for="info_formulario.grupo_cursar" />
 
                 <h3>DOCUMENTOS EN FORMATO PDF NO MAYOR A 2MB</h3>
-
-
 
                 <div class="form_documentos">
                     <label for="soli_aspirante" id="file-label">
                         <span>SOLICITUD DE ASPIRANTE</span></label>
                     <input class="file-input" type="file" name="soli_aspirante"
-                        wire:model="documentos_formulario.solicitud_aspirante_doc">
-
+                        wire:model="info_formulario.documentos.solicitud_aspirante_doc">
+                    <x-input-error-rule for="info_formulario.documentos.solicitud_aspirante_doc" />
 
                     <label for="lin_captura_d" id="file-label1">
                         <span>LINEA DE CAPTURA</span></label>
                     <input class="file-input" type="file" name="lin_captura_d"
-                        wire:model="documentos_formulario.linea_captura_doc">
+                        wire:model="info_formulario.documentos.linea_captura_doc">
+                    <x-input-error-rule for="info_formulario.documentos.linea_captura_doc" />
 
                     <label for="comp_pago" id="file-label2">
                         <span>COMPROBANTE DE PAGO</span></label>
                     <input class="file-input" type="file" name="comp_pago"
-                        wire:model="documentos_formulario.comprobante_pago_doc">
+                        wire:model="info_formulario.documentos.comprobante_pago_doc">
+                    <x-input-error-rule for="info_formulario.documentos.comprobante_pago_doc" />
 
 
                     <label for="ine" id="file-label3">
                         <span>INE</span></label>
-                    <input class="file-input" type="file" name="ine" wire:model="documentos_formulario.ine_doc">
+                    <input class="file-input" type="file" name="ine"
+                        wire:model="info_formulario.documentos.ine_doc">
+                    <x-input-error-rule for="info_formulario.documentos.ine_doc" />
 
 
                     <label for="act_nacimiento" id="file-label4">
                         <span>ACTA DE NACIMIENTO</span></label>
                     <input class="file-input" type="file" name="act_nacimiento"
-                        wire:model="documentos_formulario.acta_nacimiento_doc">
+                        wire:model="info_formulario.documentos.acta_nacimiento_doc">
+                    <x-input-error-rule for="info_formulario.documentos.acta_nacimiento_doc" />
 
 
                     <label for="comp_estudios" id="file-label5">
                         <span>COMRPOBANTE DE ESTUDIOS</span></label>
                     <input class="file-input" type="file" name="comp_estudios"
-                        wire:model="documentos_formulario.comprobante_estudio_doc">
+                        wire:model="info_formulario.documentos.comprobante_estudio_doc">
+                    <x-input-error-rule for="info_formulario.documentos.comprobante_estudio_doc" />
 
                 </div>
 

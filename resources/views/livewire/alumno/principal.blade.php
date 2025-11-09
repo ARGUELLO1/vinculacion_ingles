@@ -4,9 +4,6 @@
 
         <h1>BIENVENIDO</h1>
         <h1>{{ $info_alumno->nombre }} {{ $info_alumno->ap_paterno }} {{ $info_alumno->ap_materno }}</h1>
-        <h5>TU ID ES: {{ $info_alumno->id_alumno }}</h5>
-        <h5>EL ID DE TU NIVEL ES: {{ $info_alumno->nivel }}</h5>
-
 
         @if ($info_alumno->nivel)
             <table>
