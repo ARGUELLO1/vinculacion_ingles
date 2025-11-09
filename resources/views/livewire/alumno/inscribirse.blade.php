@@ -6,24 +6,7 @@
         @else
             <h1>INSCRIBIRSE</h1>
             <form wire:submit="save" enctype="multipart/form-data">
-
-
-                <script>
-                    function formatInput(event) {
-                        let input = event.target;
-                        let value = input.value.replace(/\s+/g, ''); // Elimina todos los espacios
-                        let formattedValue = '';
-
-                        for (let i = 0; i < value.length; i += 6) {
-                            if (i > 0) {
-                                formattedValue += ' ';
-                            }
-                            formattedValue += value.substring(i, i + 6);
-                        }
-
-                        input.value = formattedValue;
-                    }
-                </script>
+                @vite(['resources/js/lineacapturaformato.js'])
 
                 <label for="lin_captura">LINEA DE CAPTURA</label>
                 <input type="text" name="lin_captura" id="lin_captura" placeholder="XXXXXX(6) XXXXXX XXXXXX XXXXXX XXX"
