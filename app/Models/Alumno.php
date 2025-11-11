@@ -27,6 +27,8 @@ class Alumno extends Model
         'user_id',
         'expediente_id',
         'nota_id',
+        'colonia',
+        'municipio_id'
     ];
 
     protected $casts = [
@@ -55,9 +57,9 @@ class Alumno extends Model
         return $this->belongsTo(EstatusAlumno::class, 'estatus_id');
     }
 
-    public function expediente(): BelongsTo
+    public function expediente(): hasMany
     {
-        return $this->belongsTo(Expediente::class, 'expediente_id');
+        return $this->hasMany(Expediente::class, 'alumno_id');
     }
 
     public function notas(): HasMany

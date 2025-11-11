@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Expediente extends Model
@@ -32,13 +33,13 @@ class Expediente extends Model
         'updated_at' => 'datetime',
     ];
 
-    public function alumnos(): HasMany
+    public function alumnos(): BelongsTo
     {
-        return $this->hasMany(Alumno::class, 'expediente_id');
+        return $this->belongsTo(Alumno::class, 'alumno_id');
     }
 
     public function documentosExpedientes(): HasMany
     {
-        return $this->hasMany(DocumentoExpediente::class, 'expediente_id');
+        return $this->hasMany(DocumentoExpediente::class, 'id_expediente');
     }
 }
