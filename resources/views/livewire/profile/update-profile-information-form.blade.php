@@ -26,7 +26,7 @@ new class extends Component {
     public $rfc;
     public $estatus;
 
-    //Campos alumno
+    //datos alumno
     public $matricula;
     public $edad_alumno;
     public $carrera_alumno;
