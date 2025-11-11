@@ -1,21 +1,29 @@
 <div>
-    <div class="bg-white shadow rounded-lg p-6">
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-white leading-tight text-center lg:text-left">
+            {{ __('CONSTANCIAS') }}
+        </h2>
+    </x-slot>
+    <div class="bg-white shadow rounded-lg p-6 m-3">
         @if (!$carta_documento)
             <h1>AQUI SE MOSTRARAN LAS CARTAS DE TERMINO CUANDO SE SUBAN AL SISTEMA</h1>
         @else
-            <h1>CARTAS DISPONIBLES</h1>
-            <table>
+            <table
+                class="w-full text-center border border-separate rounded-lg table-auto border-gray-400 bg-gray-100 text-md">
                 <tr>
-                    <th>NOMBRE DEL DOCUMENTO</th>
-                    <th colspan="2">Acciones</th>
+                    <th class="bg-blue-800 text-white" colspan="2">CONSTANCIAS DISPONIBLES</th>
+                </tr>
+                <tr>
+                    <td>NOMBRE DEL DOCUMENTO</th>
+                    <td>OPCIÓN</th>
                 </tr>
 
                 @foreach ($archivos as $archivo)
                     <tr>
-                        <td>
+                        <td class="bg-white border border-white rounded-lg">
                             <p>{{ basename($archivo) }}</p>
                         </td>
-                        <td>
+                        <td class="bg-white border border-white rounded-lg hover:bg-blue-800 hover:text-white">
                             <a href="{{ route('Alumno.documento.descargar', [
                                 'id_grupo' => $datos_alumno->nivel->id_nivel,
                                 'grupo' => $datos_alumno->nivel->nombre_grupo,

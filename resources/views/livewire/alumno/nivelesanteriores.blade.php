@@ -1,7 +1,7 @@
 <div>
 
     <div class="bg-white shadow rounded-lg p-6">
-        @if (!$expediente)
+        @if ($expediente->isEmpty())
             <h1>TODAVÍA NO HAY NIVELES PARA MOSTRAR</h1>
         @else
             <table>

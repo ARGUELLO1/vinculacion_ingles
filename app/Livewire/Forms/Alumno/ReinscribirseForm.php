@@ -21,7 +21,7 @@ class ReinscribirseForm extends Form
     public $info_alumno;
 
     //INFORMACIÓN DEL FORMULARIO
-    #[Rule('required|unique:expedientes,lin_captura_t')]
+  #[Rule('required|unique:expedientes,lin_captura_t|regex:/^[0-9\s]+$/')]
     public $linea_captura;
 
     #[Rule('required')]

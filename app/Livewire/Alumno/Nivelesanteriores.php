@@ -41,7 +41,6 @@ class NivelesAnteriores extends Component
                 $expediente->nota_final = number_format($nota_nivel->promedio, 2);
             }
         }
-        //dd($this->expediente);
     }
 
 

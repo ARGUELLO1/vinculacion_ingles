@@ -21,9 +21,9 @@ Route::prefix('alumno')->name('Alumno.')->middleware(['auth', 'role:alumno'])->g
     Route::get('/cartas_de_termino', Carterm::class)->name('carterm');
     Route::get('/nivelesanteriores', NivelesAnteriores::class)->name('nivelesanteriores');
     Route::get('/descargar/{id_grupo}/{grupo}/{archivo}', [DocumentoController::class, 'descargar'])->name('documento.descargar');
+    Route::get('/ver/{nivel}/{alumno}/{archivo}', [DocumentoController::class, 'ver'])->name('documento.ver');
+
 
 
     // aquí luego puedes agregar más rutas del alumno, p.ej huevos al arguello xd.
 });
-
-

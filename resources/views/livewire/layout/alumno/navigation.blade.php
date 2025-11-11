@@ -108,6 +108,27 @@ new class extends Component {
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('Alumno.principal')" :active="request()->routeIs('Alumno.principal')" wire:navigate>
+                {{ __('INICIO') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('Alumno.inscribirse')" :active="request()->routeIs('Alumno.inscribirse')" wire:navigate>
+                {{ __('INSCRIBIRSE') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('Alumno.reinscribirse')" :active="request()->routeIs('Alumno.reinscribirse')" wire:navigate>
+                {{ __('REINSCRIBIRSE') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('Alumno.carterm')" :active="request()->routeIs('Alumno.carterm')" wire:navigate>
+                {{ __('CARTAS DE TERMINO') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('Alumno.nivelesanteriores')" :active="request()->routeIs('Alumno.nivelesanteriores')" wire:navigate>
+                {{ __('NIVELES FINALIZADOS') }}
+            </x-responsive-nav-link>
+
         </div>
 
         <!-- Responsive Settings Options -->
