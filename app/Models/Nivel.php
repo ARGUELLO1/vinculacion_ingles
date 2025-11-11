@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 
 class Nivel extends Model
 {
@@ -23,12 +24,14 @@ class Nivel extends Model
         'periodo_id',
         'modalidad',
         'horario',
+        'nivel_concluido',
     ];
 
     protected $casts = [
         'cupo_max' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'nivel_concluido' => 'boolean', 
     ];
 
     public function profesor(): BelongsTo
@@ -58,5 +61,13 @@ class Nivel extends Model
     public function modalidad()
     {
         return $this->belongsTo(Modalidad::class, 'modalidad_id', 'id_modalidad');
+    }
+       public function scopeActivos(Builder $query): void
+    {
+        $query->where('nivel_concluido', false); // o ->where('nivel_concluido', 0)
+    }
+        public function scopeConcluidos(Builder $query): void
+    {
+        $query->where('nivel_concluido', true); // o ->where('nivel_concluido', 1)
     }
 }

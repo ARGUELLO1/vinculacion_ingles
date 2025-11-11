@@ -25,8 +25,17 @@ class AsistenciaExport implements FromCollection, WithHeadings, WithMapping, Sho
         $this->grupo = $grupo;
         $this->parcial = $parcial;
 
-        // 1. Obtenemos a todos los alumnos
-        $this->alumnos = $this->grupo->alumnos()
+
+        $alumnosActuales = $this->grupo->alumnos()
+            ->pluck('id_alumno');
+
+        $alumnosConAsistencia = Asistencia::where('nivel_id', $this->grupo->id_nivel)
+            ->where('parcial', $this->parcial)
+            ->pluck('alumno_id');
+
+        $idsUnicos = $alumnosActuales->merge($alumnosConAsistencia)->unique();
+
+        $this->alumnos = \App\Models\Alumno::whereIn('id_alumno', $idsUnicos)
             ->orderBy('ap_paterno')
             ->orderBy('ap_materno')
             ->orderBy('nombre')
@@ -48,12 +57,10 @@ class AsistenciaExport implements FromCollection, WithHeadings, WithMapping, Sho
             ->values();
 
         // 4. Creamos un mapa [id_alumno => [fecha_Y-m-d => 'A', fecha_Y-m-d => 'F']]
-        // ¡ESTA ERA LA PARTE DEL ERROR!
         $this->asistenciasMap = $todasLasAsistencias
             ->groupBy('alumno_id') // Agrupa por alumno
             ->map(function ($asistenciasDelAlumno) {
                 // 'fecha' es un string 'YYYY-MM-DD' en la BD (o lo forzamos a serlo)
-                // Usamos 'fecha' (el string) como la clave
                 return $asistenciasDelAlumno
                     ->mapWithKeys(function ($asistencia) {
                         $fechaKey = Carbon::parse($asistencia->fecha)->format('Y-m-d');

@@ -1,7 +1,7 @@
 <div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-white leading-tight">
-          GRUPO - {{ $grupo->nombre_grupo }} - SELECCIONADO
+            GRUPO - {{ $grupo->nombre_grupo }} - SELECCIONADO
         </h2>
     </x-slot>
     {{-- BLOQUE DE ALERTAS (Toast Notifications) --}}
@@ -40,7 +40,7 @@
                 </p>
 
                 {{-- Mensaje de Parcial Activo --}}
-                @if ($parcialActivo)
+                @if ($parcialActivo && $grupo->nivel_concluido == 0)
 
                 <div class="text-center">
                     <p class="text-yellow-300 bg-black/60 text-lg font-semibold mt-2 px-4 py-2 rounded-lg shadow-md inline-block">
@@ -71,7 +71,7 @@
 
             {{-- Contenido principal --}}
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
+                @if ($grupo->nivel_concluido == 0)
                 {{-- 1. BOTONES PARA CAMBIAR DE MODO (NUEVO) --}}
                 <div class="mb-4 flex justify-center rounded-lg shadow-sm" role="group">
                     <button type="button"
@@ -97,6 +97,7 @@
                         Asistencia
                     </button>
                 </div>
+                @endif
                 {{-- FIN: BOTONES DE MODO --}}
 
                 {{-- 2. BOTONES DE DESCARGA DE EXCEL --}}
@@ -142,6 +143,7 @@
                 {{-- FIN: BOTONES DE DESCARGA --}}
 
                 {{-- PDF --}}
+                @if ($grupo->nivel_concluido == 0)
                 <a href="{{ route('exportar.reporte', ['grupo' => $grupo->id_nivel, 'parcial' => $parcialActivoNumero]) }}"
                     target="_blank"
                     class="inline-flex items-center px-3 py-1 text-sm font-medium rounded-lg border
@@ -153,6 +155,7 @@
                     </svg>
                     Reporte PDF (Parcial Activo)
                 </a>
+                @endif
 
                 @if ($modo === 'calificaciones')
 
@@ -217,8 +220,8 @@
                                             wire:model.blur="calificaciones.{{ $alumno->id_alumno }}.nota_parcial_1"
                                             class="w-20 text-center rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 
                                                            disabled:bg-gray-200 disabled:cursor-not-allowed"
-                                            @disabled($parcialActivo !=='nota_parcial_1' )
-                                            aria-label="Calificación Parcial 1 para {{ $alumno->nombre }}">
+                                            @disabled($parcialActivo !=='nota_parcial_1' || $grupo->nivel_concluido == 1)
+                                        aria-label="Calificación Parcial 1 para {{ $alumno->nombre }}">
                                         @error('calificaciones.'.$alumno->id_alumno.'.nota_parcial_1') <span class="text-red-500 text-xs">Error</span> @enderror
                                     </td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-700">
@@ -226,8 +229,8 @@
                                             wire:model.blur="calificaciones.{{ $alumno->id_alumno }}.nota_parcial_2"
                                             class="w-20 text-center rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500
                                                            disabled:bg-gray-200 disabled:cursor-not-allowed"
-                                            @disabled($parcialActivo !=='nota_parcial_2' )
-                                            aria-label="Calificación Parcial 2 para {{ $alumno->nombre }}">
+                                            @disabled($parcialActivo !=='nota_parcial_2' || $grupo->nivel_concluido == 1)
+                                        aria-label="Calificación Parcial 2 para {{ $alumno->nombre }}">
                                         @error('calificaciones.'.$alumno->id_alumno.'.nota_parcial_2') <span class="text-red-500 text-xs">Error</span> @enderror
                                     </td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-700">
@@ -235,8 +238,9 @@
                                             wire:model.blur="calificaciones.{{ $alumno->id_alumno }}.nota_parcial_3"
                                             class="w-20 text-center rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500
                                                            disabled:bg-gray-200 disabled:cursor-not-allowed"
-                                            @disabled($parcialActivo !=='nota_parcial_3' )
-                                            aria-label="Calificación Parcial 3 para {{ $alumno->nombre }}">
+                                            @disabled($parcialActivo !=='' )
+                                            @disabled($parcialActivo !=='nota_parcial_3' || $grupo->nivel_concluido == 1)
+                                        aria-label="Calificación Parcial 3 para {{ $alumno->nombre }}">
                                         @error('calificaciones.'.$alumno->id_alumno.'.nota_parcial_3') <span class="text-red-500 text-xs">Error</span> @enderror
                                     </td>
                                 </tr>
@@ -267,7 +271,8 @@
 
 
                 {{-- 4. VISTA DE ASISTENCIA (NUEVA) --}}
-                @elseif ($modo === 'asistencia')
+                
+                @elseif ($modo === 'asistencia' && $grupo->nivel_concluido == 0 )
 
                 {{-- Controles de Asistencia (Selector de Fecha y Buscador) --}}
                 <div class="flex flex-col sm:flex-row justify-between mb-4 space-y-2 sm:space-y-0">
