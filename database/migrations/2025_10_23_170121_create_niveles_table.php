@@ -24,6 +24,7 @@ return new class extends Migration
             $table->enum('parcial_1', ['1', '0'])->nullable();
             $table->enum('parcial_2', ['1', '0'])->nullable();
             $table->enum('parcial_3', ['1', '0'])->nullable();
+            $table->enum('nivel_concluido', ['1', '0'])->nullable();
             $table->timestamps();
 
             $table->index('profesor_id');

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Expediente extends Model
@@ -13,13 +14,9 @@ class Expediente extends Model
     protected $primaryKey = 'id_expediente';
 
     protected $fillable = [
-        'nivel',
-        'lin_captura',
-        'soli_aspirante',
-        'acta_nac',
-        'comp_estu',
-        'ine',
-        'comp_pago',
+        'alumno_id',
+        'nivel_id',
+        'ruta_expediente',
         'lin_captura_t',
         'fecha_pago',
         'fecha_entrega',
@@ -32,13 +29,18 @@ class Expediente extends Model
         'updated_at' => 'datetime',
     ];
 
-    public function alumnos(): HasMany
+    public function alumno(): BelongsTo
     {
-        return $this->hasMany(Alumno::class, 'expediente_id');
+        return $this->belongsTo(Alumno::class, 'alumno_id', 'id_alumno');
+    }
+
+    public function nivel(): BelongsTo
+    {
+        return $this->belongsTo(Nivel::class, 'nivel_id', 'id_nivel');
     }
 
     public function documentosExpedientes(): HasMany
     {
-        return $this->hasMany(DocumentoExpediente::class, 'expediente_id');
+        return $this->hasMany(DocumentoExpediente::class, 'expediente_id', 'id_expediente');
     }
 }

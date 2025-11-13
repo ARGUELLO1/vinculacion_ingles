@@ -52,7 +52,9 @@ class RolePermissionSeeder extends Seeder
         Permission::create(['name' => 'niveles.create', 'descripcion' => 'Poder crear Niveles'])->syncRoles($capturistaRole);
         Permission::create(['name' => 'niveles.delete', 'descripcion' => 'Poder eliminar Niveles'])->syncRoles($adminRole);
         Permission::create(['name' => 'niveles.options', 'descripcion' => 'Poder ver columna de opciones en Niveles'])->syncRoles($adminRole, $coordinadorRole, $capturistaRole);
-        Permission::create(['name' => 'niveles.show', 'descripcion' => 'Poder visualizar los datos del campo seleccioando en Niveles'])->syncRoles($adminRole, $coordinadorRole, $capturistaRole);
+        Permission::create(['name' => 'niveles.show', 'descripcion' => 'Poder visualizar los datos del campo seleccionado en Niveles'])->syncRoles($adminRole, $coordinadorRole, $capturistaRole);
+        Permission::create(['name' => 'niveles.conclude', 'descripcion' => 'Poder concluir un nivel en Niveles'])->syncRoles($adminRole);
+        Permission::create(['name' => 'niveles.reactive', 'descripcion' => 'Poder reactivar un nivel en Niveles'])->syncRoles($adminRole);
 
         //Solo con permisos concedidos por el administrador o el coordinador
         Permission::create(['name' => 'niveles.update', 'descripcion' => 'Poder editar Niveles']);
