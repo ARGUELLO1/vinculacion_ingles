@@ -29,18 +29,13 @@ class Expediente extends Model
         'updated_at' => 'datetime',
     ];
 
-    public function alumno(): BelongsTo
+    public function alumnos(): BelongsTo
     {
-        return $this->belongsTo(Alumno::class, 'alumno_id', 'id_alumno');
-    }
-
-    public function nivel(): BelongsTo
-    {
-        return $this->belongsTo(Nivel::class, 'nivel_id', 'id_nivel');
+        return $this->belongsTo(Alumno::class, 'alumno_id');
     }
 
     public function documentosExpedientes(): HasMany
     {
-        return $this->hasMany(DocumentoExpediente::class, 'expediente_id', 'id_expediente');
+        return $this->hasMany(DocumentoExpediente::class, 'id_expediente');
     }
 }

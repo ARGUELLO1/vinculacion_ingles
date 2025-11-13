@@ -1,5 +1,21 @@
 <?php
 
+use App\Livewire\Admin\Dashboard as DashboardAdmin;
+use App\Livewire\Admin\Usuarios\Capturistas\Index as CapturistasIndex;
+use App\Livewire\Admin\Usuarios\Capturistas\Create as CapturistasCreate;
+use App\Livewire\Admin\Usuarios\Capturistas\Update as CapturistasUpdate;
+use App\Livewire\Admin\Usuarios\Coordinadores\Index as CoordinadoresIndex;
+use App\Livewire\Admin\Usuarios\Coordinadores\Create as CoordinadoresCreate;
+use App\Livewire\Admin\Usuarios\Coordinadores\Update as CoordinadorUpdate;
+use App\Livewire\Admin\Usuarios\Profesores\Index as ProfesoresIndex;
+use App\Livewire\Admin\Usuarios\Profesores\Create as ProfesoresCreate;
+use App\Livewire\Admin\Usuarios\Profesores\Update as ProfesoresUpdate;
+use App\Livewire\Admin\Usuarios\Alumnos\Index as AlumnosIndex;
+use App\Livewire\Alumno\Carterm;
+use App\Livewire\Alumno\Infoalumno;
+use App\Livewire\Alumno\Inscribirse;
+use App\Livewire\Alumno\Principal;
+use App\Livewire\Alumno\Reinscribirse;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExportController;
 
@@ -10,7 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         $user = auth()->user();
         $mainRole = $user->getRoleNames()->first();
-        
+
         return match (strtolower($mainRole)) {
             'admin' => redirect()->route('admin.dashboard'),
             'coordinador' => redirect()->route('coordinador.dashboard'),
@@ -27,8 +43,8 @@ Route::middleware('auth')->group(function () {
 
     //pdf profesor
     Route::get('/grupo/{grupo}/reporte-pdf/{parcial?}', [ExportController::class, 'exportarReportePDF'])
-    ->name('exportar.reporte')
-    ->where('parcial', '[1-3]');
+        ->name('exportar.reporte')
+        ->where('parcial', '[1-3]');
 
     // Rutas de Perfil (Comunes para todos los roles)
     Route::view('profile', 'profile')->name('profile');
@@ -44,6 +60,10 @@ Route::middleware('auth')->group(function () {
 
     //Profesor
     require __DIR__ . '/UsuariosRoutes/ProfesorRoutes.php';
+
+    //Logica sobre Alumnos
+    Route::get('/alomnos', AlumnosIndex::class)->name('admin.alumnos.index');
+
 
     //Alumno
     require __DIR__ . '/UsuariosRoutes/AlumnoRoutes.php';

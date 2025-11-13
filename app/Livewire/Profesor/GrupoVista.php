@@ -2,30 +2,29 @@
 
 namespace App\Livewire\Profesor;
 
-//Modelos sisi :v
 use App\Models\Nivel;
 use App\Models\Nota;
-use App\Models\Asistencia; 
-//componentes
+use App\Models\Asistencia;
+use App\Models\Alumno;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 class GrupoVista extends Component
 {
-    use WithPagination; 
+    use WithPagination;
 
-    // Propiedades existentes
     public Nivel $grupo;
     public string $search = '';
     public array $calificaciones = [];
     public ?string $parcialActivo = null;
     public bool $filtroReprobados = false;
-    
 
-    public string $modo = 'calificaciones'; // 'calificaciones' o 'asistencia'
-    public string $fechaAsistencia; // Formato Y-m-d
-    public array $asistenciasHoy = []; // Guarda [alumno_id => 'A'] o [alumno_id => 'F']
-    public int $parcialActivoNumero = 0; // 1, 2, o 3
+    public string $modo = 'calificaciones';
+    public string $fechaAsistencia;
+    public array $asistenciasHoy = [];
+    public int $parcialActivoNumero = 0;
+
+    public bool $isConcluido = false;
 
     protected array $rules = [
         'calificaciones.*.nota_parcial_1' => 'nullable|numeric|min:0|max:99.9',
@@ -36,7 +35,7 @@ class GrupoVista extends Component
     public function mount(Nivel $grupo)
     {
         $this->grupo = $grupo;
-
+        $this->isConcluido = $this->grupo->nivel_concluido ?? false;
 
         if ($this->grupo->parcial_1 === '1') {
             $this->parcialActivo = 'nota_parcial_1';
@@ -49,84 +48,89 @@ class GrupoVista extends Component
             $this->parcialActivoNumero = 3;
         }
 
-        $alumnos = $this->grupo->alumnos()
-            ->with(['carrera', 'notas' => function ($query) {
-                $query->where('nivel_id', $this->grupo->id_nivel);
-            }])
-            ->get(); 
-
-        foreach ($alumnos as $alumno) {
-            $nota = $alumno->notas->first();
-            $this->calificaciones[$alumno->id_alumno] = [
+        $notasDelGrupo = Nota::where('nivel_id', $this->grupo->id_nivel)->get();
+        foreach ($notasDelGrupo as $nota) {
+            $this->calificaciones[$nota->alumno_id] = [
                 'nota_parcial_1' => $nota->nota_parcial_1 ?? null,
                 'nota_parcial_2' => $nota->nota_parcial_2 ?? null,
                 'nota_parcial_3' => $nota->nota_parcial_3 ?? null,
             ];
         }
-   
 
-       
-        $this->fechaAsistencia = now()->format('Y-m-d'); // Pone la fecha de HOY
-        $this->cargarAsistencias(); // Carga las asistencias para hoy
-      
+        $this->fechaAsistencia = now()->format('Y-m-d');
+        $this->cargarAsistencias();
     }
 
     public function setModo(string $modo)
     {
         $this->modo = $modo;
-        $this->resetPage(); 
+        $this->resetPage();
     }
-
 
     public function cargarAsistencias()
     {
         $this->asistenciasHoy = Asistencia::where('nivel_id', $this->grupo->id_nivel)
             ->where('fecha', $this->fechaAsistencia)
-            ->pluck('asistencia', 'alumno_id') // Devuelve un array [alumno_id => 'A']
+            ->pluck('asistencia', 'alumno_id')
             ->toArray();
     }
 
-  
     public function updatedFechaAsistencia()
     {
-        $this->cargarAsistencias(); 
+        $this->cargarAsistencias();
     }
-
 
     public function guardarAsistencia($alumnoId, $estatus)
     {
-        // No se puede guardar asistencia si no hay parcial activo
+        if ($this->isConcluido) {
+            $this->dispatch('alerta-error', ['mensaje' => 'Este grupo está concluido y no se puede modificar.']);
+            return;
+        }
+
         if ($this->parcialActivoNumero === 0) {
-            $this->dispatch('alerta-error', mensaje: 'No hay un parcial activo para registrar asistencia.');
+            $this->dispatch('alerta-error', ['mensaje' => 'No hay un parcial activo para registrar asistencia.']);
             return;
         }
 
         Asistencia::updateOrCreate(
             [
-                //  BUSCAR
                 'alumno_id' => $alumnoId,
                 'nivel_id'  => $this->grupo->id_nivel,
                 'fecha'     => $this->fechaAsistencia,
             ],
             [
-                // Columnas para ACTUALIZAR o CREAR
-                'parcial'     => $this->parcialActivoNumero, // Usa el número 1, 2 o 3
-                'asistencia'  => $estatus, // 'A' o 'F'
+                'parcial'    => $this->parcialActivoNumero,
+                'asistencia' => $estatus,
             ]
         );
 
-        // Actualiza el array local
         $this->asistenciasHoy[$alumnoId] = $estatus;
-
-        $this->dispatch('alerta-exito', mensaje: 'Asistencia guardada.');
+        $this->dispatch('alerta-exito', ['mensaje' => 'Asistencia guardada correctamente.']);
     }
 
     public function updatedCalificaciones($value, $key)
     {
+        if ($this->isConcluido) {
+            $this->dispatch('alerta-error', ['mensaje' => 'Este grupo está concluido y no se puede modificar.']);
+            return;
+        }
+
         $this->validateOnly('calificaciones.' . $key);
 
         $parts = explode('.', $key);
-        $alumnoId = $parts[0];
+        if (count($parts) < 2) return;
+
+        [$alumnoId, $campo] = $parts;
+
+        if (!isset($this->calificaciones[$alumnoId])) {
+            $this->calificaciones[$alumnoId] = [
+                'nota_parcial_1' => null,
+                'nota_parcial_2' => null,
+                'nota_parcial_3' => null,
+            ];
+        }
+
+        $this->calificaciones[$alumnoId][$campo] = $value === '' ? null : $value;
 
         $notasDelAlumno = $this->calificaciones[$alumnoId];
 
@@ -142,16 +146,15 @@ class GrupoVista extends Component
             ]
         );
 
-        $this->dispatch('alerta-exito', mensaje: '¡Calificación actualizada con éxito!');
+        $this->dispatch('alerta-exito', ['mensaje' => '¡Calificación actualizada con éxito!']);
     }
 
     public function toggleFiltroReprobados()
     {
         $this->filtroReprobados = !$this->filtroReprobados;
-        $this->resetPage(); // Resetea la paginación al cambiar de filtro
+        $this->resetPage();
     }
 
-    // Hook para resetear la página si se cambia la búsqueda
     public function updatingSearch()
     {
         $this->resetPage();
@@ -159,34 +162,39 @@ class GrupoVista extends Component
 
     public function render()
     {
-        // La consulta base de alumnos
-        $alumnosQuery = $this->grupo->alumnos()
-            ->with(['carrera']) 
-            ->when($this->search, function ($query) {
-                $query->where(function ($subQuery) {
-                    $subQuery->where('nombre', 'like', '%' . $this->search . '%')
-                        ->orWhere('ap_paterno', 'like', '%' . $this->search . '%')
-                        ->orWhere('ap_materno', 'like', '%' . $this->search . '%');
-                });
-            })
-            // APLICA EL FILTRO N/A (Reprobados) 
-            ->when($this->filtroReprobados && $this->modo === 'calificaciones' && $this->parcialActivo, function ($query) {
-                $query->whereHas('notas', function ($subQuery) {
-                    $subQuery->where('nivel_id', $this->grupo->id_nivel)
-                             
+        if ($this->isConcluido) {
+            $alumnoIds = Nota::where('nivel_id', $this->grupo->id_nivel)
+                ->pluck('alumno_id')
+                ->unique();
 
-                             ->where($this->parcialActivo, '>', 0) 
-                             
-                             ->where($this->parcialActivo, '<', 70);
-                             
+            $alumnosQuery = Alumno::whereIn('id_alumno', $alumnoIds)
+                ->with('carrera');
+        } else {
+            $alumnosQuery = $this->grupo->alumnos()
+                ->with('carrera');
+        }
 
-                });
+        $alumnosQuery->when($this->search, function ($query) {
+            $query->where(function ($sub) {
+                $sub->where('nombre', 'like', "%{$this->search}%")
+                    ->orWhere('ap_paterno', 'like', "%{$this->search}%")
+                    ->orWhere('ap_materno', 'like', "%{$this->search}%");
             });
+        });
+
+        if ($this->filtroReprobados && $this->modo === 'calificaciones' && $this->parcialActivo) {
+            $alumnosQuery->whereHas('notas', function ($q) {
+                $q->where('nivel_id', $this->grupo->id_nivel)
+                    ->where($this->parcialActivo, '>', 0)
+                    ->where($this->parcialActivo, '<', 70);
+            });
+        }
+
+        $alumnosQuery->orderBy('ap_paterno')->orderBy('ap_materno')->orderBy('nombre');
 
         return view('livewire.profesor.grupo-vista', [
-            
-            'alumnos' => $alumnosQuery->paginate(15), 
-            'parcialActivo' => $this->parcialActivo 
+            'alumnos' => $alumnosQuery->paginate(15),
+            'parcialActivo' => $this->parcialActivo,
         ]);
     }
 }

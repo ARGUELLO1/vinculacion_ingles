@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
 
 class Nivel extends Model
 {
@@ -21,7 +22,6 @@ class Nivel extends Model
         'cupo_max',
         'horario',
         'profesor_id',
-        'periodo_id',
         'modalidad_id',
         'parcial_1',
         'parcial_2',
@@ -33,6 +33,7 @@ class Nivel extends Model
         'cupo_max' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'nivel_concluido' => 'boolean',
     ];
 
     public function profesor(): BelongsTo

@@ -33,12 +33,12 @@ return new class extends Migration
 
         Schema::create('documentos_expedientes', function (Blueprint $table) {
             $table->id('id_documento_expediente');
-            $table->foreignId('nivel_id')->constrained('niveles', 'id_nivel');
+            $table->foreignId('id_expediente')->constrained('expedientes', 'id_expediente');
             $table->string('tipo_doc', 100);
             $table->text('ruta_doc');
             $table->timestamps();
 
-            $table->index('nivel_id');
+            $table->index('id_expediente');
         });
     }
 
