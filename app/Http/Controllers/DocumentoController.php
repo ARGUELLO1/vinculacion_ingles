@@ -28,7 +28,6 @@ class DocumentoController extends Controller
             ->header('Content-Disposition', 'inline; filename="' . basename($ruta) . '"');
     }
 
-    //BORRAR (ABAJO)
     public function ver($id_nivel, $id_alumno, $archivo)
     {
 

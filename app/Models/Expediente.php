@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Expediente extends Model
 {
@@ -41,5 +42,10 @@ class Expediente extends Model
     public function documentosExpedientes(): HasMany
     {
         return $this->hasMany(DocumentoExpediente::class, 'id_expediente');
+    }
+
+    public function nivel(): BelongsTo
+    {
+        return $this->belongsTo(Nivel::class, 'nivel_id');
     }
 }

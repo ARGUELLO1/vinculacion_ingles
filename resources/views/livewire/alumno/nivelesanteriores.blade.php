@@ -1,44 +1,83 @@
 <div>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-white leading-tight text-center lg:text-left">
+            {{ __('NIVELES QUE HAS CURSADO') }}
+        </h2>
+    </x-slot>
 
-    <div class="bg-white shadow rounded-lg p-6">
+    <div class="bg-white shadow rounded-lg m-4 lg:p-6 lg:m-3 lg:text-lg font-bold">
         @if ($expediente->isEmpty())
             <h1>TODAVÍA NO HAY NIVELES PARA MOSTRAR</h1>
         @else
-            <table>
-                <tr>
-                    <th colspan="4">INFORMACIÓN DEL NIVEL</th>
-                    <th colspan="4">CALIFICACIONES</th>
+            <table class="w-full text-center border border-separate rounded-lg table-auto border-gray-400 bg-gray-100 text-md">
+                <tr >
+                    <th class="bg-blue-800 text-white" colspan="5">INFORMACIÓN DEL NIVEL</th>
+                    <th class="bg-blue-800 text-white" colspan="4">CALIFICACIONES</th>
                 </tr>
                 <tr>
                     <td>NIVEL</td>
                     <td>GRUPO</td>
                     <td>PERIODO</td>
                     <td>MAESTRO</td>
+                    <td>DOCUMENTOS</td>
                     <td>PARCIAL 1</td>
                     <td>PARCIAL 2</td>
                     <td>PARCIAL 3</td>
                     <td>FINAL</td>
+
                 </tr>
 
                 @foreach ($expediente as $exp)
-                    <tr>
-                        <td>{{ $exp->nivel }}</td>
-                        <td>{{ $exp->grupo }}</td>
-                        <td>{{ $exp->periodo }}</td>
-                        <td>{{ $exp->maestro }}</td>
-                        <td>{{ $exp->nota_parcial_1 }}</td>
-                        <td>{{ $exp->nota_parcial_2 }}</td>
-                        <td>{{ $exp->nota_parcial_3 }}</td>
-                        <td>{{ $exp->nota_final }}</td>
+                    <tr wire:key="expediente-{{ $exp->id_expediente }}">
+                        <td class="bg-white border border-white rounded-lg">{{ $exp->nivel_texto }}</td>
+                        <td class="bg-white border border-white rounded-lg">{{ $exp->grupo_texto }}</td>
+                        <td class="bg-white border border-white rounded-lg">{{ $exp->periodo_texto }}</td>
+                        <td class="bg-white border border-white rounded-lg">{{ $exp->maestro_texto }}</td>
+                        <td class="bg-white border border-white rounded-lg">
+                            <x-primary-button wire:key="expediente-{{ $exp->id_expediente }}"
+                                wire:click="ver({{ $exp->id_expediente }})">VER</x-primary-button>
+                        </td>
+                        <td class="bg-white border border-white rounded-lg">{{ $exp->nota_parcial_1_texto }}</td>
+                        <td class="bg-white border border-white rounded-lg">{{ $exp->nota_parcial_2_texto }}</td>
+                        <td class="bg-white border border-white rounded-lg">{{ $exp->nota_parcial_3_texto }}</td>
+                        <td class="bg-white border border-white rounded-lg">{{ $exp->nota_final_texto }}</td>
                     </tr>
                 @endforeach
             </table>
         @endif
     </div>
 
-    {{--
-    COSAS POR HACER
-    ->Programar la restricción para que no se puedan duplicar las lineas de captura
-    ->Darle diseño a todo XD
-    --}}
+    {{-- MODAL --}}
+    @if ($open)
+        <div class="bg-gray-800 bg-opacity-25 fixed inset-0 flex items-center justify-center">
+            <div class="bg-white shadow rounded-lg m-4 lg:p-6 lg:m-3 w-full lg:text-lg font-bold">
+                <table class="w-full text-center border border-separate rounded-lg table-auto border-gray-400 bg-gray-100 text-md">
+                    <tr>
+                        <th class="bg-blue-800 text-white" colspan="2">DOCUMENTOS SUBIDOS AL SISTEMA</th>
+                    </tr>
+                    <tr>
+                        <td>DOCUMENTO</td>
+                        <td>OPCIÓN</td>
+                    </tr>
+                    @foreach ($documentos_nivel as $documento)
+                        <tr>
+                            <td class="bg-white border border-white rounded-lg">{{ $documento->tipo_doc }}</td>
+                            <td class="bg-white border border-white rounded-lg hover:bg-blue-800 hover:text-white">
+                                <a href="{{ route('Alumno.documento.ver', [
+                                    'nivel' => $documento->expediente->nivel_id,
+                                    'alumno' => $info_alumno->id_alumno,
+                                    'archivo' => basename($documento->tipo_doc),
+                                ]) }}"
+                                    target="_blank">
+                                    VER
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
+                </table>
+                <x-danger-button wire:click="close()" class="my-3 w-full flex justify-center">CERRAR</x-danger-button>
+            </div>
+        </div>
+    @endif
+
 </div>

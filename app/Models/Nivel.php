@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Nivel extends Model
 {
@@ -69,5 +70,9 @@ class Nivel extends Model
         public function scopeConcluidos(Builder $query): void
     {
         $query->where('nivel_concluido', true); // o ->where('nivel_concluido', 1)
+    }
+
+    public function expediente(): HasOne{
+        return $this->hasOne(Expediente::class, 'id_nivel');
     }
 }

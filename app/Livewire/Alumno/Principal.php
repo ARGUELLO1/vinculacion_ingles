@@ -14,6 +14,7 @@ class Principal extends Component
     public $info_alumno;
     public $nota;
     public $documentos;
+    public $constancia;
 
 
     public function mount()
@@ -23,7 +24,7 @@ class Principal extends Component
         if ($this->info_alumno->nivel_id) {
             $this->nota = Nota::where('nivel_id', $this->info_alumno->nivel->id_nivel)->where('alumno_id', $this->info_alumno->id_alumno)->first();
             $this->documentos = Expediente::where('alumno_id', $this->info_alumno->id_alumno)->where('nivel_id', $this->info_alumno->nivel_id)->first();
-            //dd($this->documentos->documentosExpedientes);
+
         }
     }
 

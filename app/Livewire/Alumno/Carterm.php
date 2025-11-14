@@ -26,7 +26,7 @@ class Carterm extends Component
                 //obtenemos el nombre de todos los archivos que existen en esa carpeta
                 $this->archivos = Storage::files($this->carta_documento->ruta_doc);
             }
-        } 
+        }
     }
 
 
