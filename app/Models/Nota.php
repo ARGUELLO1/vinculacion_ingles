@@ -13,16 +13,17 @@ class Nota extends Model
     protected $primaryKey = 'id_nota';
 
     protected $fillable = [
+        'alumno_id',
+        'nivel_id',
         'nota_parcial_1',
         'nota_parcial_2',
         'nota_parcial_3',
-        'alumno_id',  // <-- AÑADIR ESTA LÍNEA
-        'nivel_id',    // <-- AÑADIR ESTA LÍNEA
     ];
+
     protected $casts = [
-        'nota_parcial_1' => 'decimal:1',
-        'nota_parcial_2' => 'decimal:1',
-        'nota_parcial_3' => 'decimal:1',
+        'nota_parcial_1' => 'integer',
+        'nota_parcial_2' => 'integer',
+        'nota_parcial_3' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

@@ -43,7 +43,7 @@
                             <x-input-label for="horario" :value="__('Horario')" />
                             <div class="mt-1 flex items-center space-x-4">
                                 <div class="flex-1">
-                                    <x-input-label for="hora_entrada" :value="__('Entrada')" />
+                                    <x-input-label for="hora_entrada" :value="__('Entrada')" class="text-gray-500" />
                                     <x-text-input wire:model="form.hora_entrada" id="hora_entrada" name="hora_entrada"
                                         type="time" class="mt-1 block w-full" required autofocus
                                         autocomplete="hora_entrada" />
@@ -52,7 +52,7 @@
                                     <span class="text-gray-500">-</span>
                                 </div>
                                 <div class="flex-1">
-                                    <x-input-label for="hora_salida" :value="__('Salida')" />
+                                    <x-input-label for="hora_salida" :value="__('Salida')" class="text-gray-500" />
                                     <x-text-input wire:model="form.hora_salida" id="hora_salida" name="hora_salida"
                                         type="time" class="mt-1 block w-full" required autofocus
                                         autocomplete="hora_salida" />

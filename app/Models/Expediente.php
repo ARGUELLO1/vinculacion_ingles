@@ -15,13 +15,9 @@ class Expediente extends Model
     protected $primaryKey = 'id_expediente';
 
     protected $fillable = [
-        'nivel',
-        'lin_captura',
-        'soli_aspirante',
-        'acta_nac',
-        'comp_estu',
-        'ine',
-        'comp_pago',
+        'alumno_id',
+        'nivel_id',
+        'ruta_expediente',
         'lin_captura_t',
         'fecha_pago',
         'fecha_entrega',

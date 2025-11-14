@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id('id_nota');
             $table->foreignId('alumno_id')->constrained('alumnos', 'id_alumno');
             $table->foreignId('nivel_id')->constrained('niveles', 'id_nivel');
-            $table->decimal('nota_parcial_1', 3, 1);
-            $table->decimal('nota_parcial_2', 3, 1);
-            $table->decimal('nota_parcial_3', 3, 1);
+            $table->integer('nota_parcial_1');
+            $table->integer('nota_parcial_2')->nullable();
+            $table->integer('nota_parcial_3')->nullable();
             $table->timestamps();
 
             $table->index('alumno_id');
