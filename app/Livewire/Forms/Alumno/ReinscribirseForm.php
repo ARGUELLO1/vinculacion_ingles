@@ -21,7 +21,7 @@ class ReinscribirseForm extends Form
     public $info_alumno;
 
     //INFORMACIÓN DEL FORMULARIO
-  #[Rule('required|unique:expedientes,lin_captura_t|regex:/^[0-9\s]+$/')]
+    #[Rule('required|unique:expedientes,lin_captura_t|regex:/^[0-9\s]+$/')]
     public $linea_captura;
 
     #[Rule('required')]
@@ -51,7 +51,6 @@ class ReinscribirseForm extends Form
 
     public function save()
     {
-
         //CAMBIAR LOS livewire:model EN LA VISTA .BLADE URGENTEEEE
 
 
@@ -72,7 +71,7 @@ class ReinscribirseForm extends Form
 
         $nivel = Nivel::find($this->grupo_cursar);
         //Creamos la carpeta del alumno con la id alumno y dentro creamos una carpeta colocando el id_nivel como nombre
-        $ruta_expediente = "expedientes_alumno/" . $this->info_alumno->id_alumno . "_" . $this->info_alumno->matricula . "/" . $this->grupo_cursar . "_" . $nivel->nombre_grupo;
+        $ruta_expediente = "expedientesAlumnos/" . $this->info_alumno->id_alumno . "_" . $this->info_alumno->matricula . "/" . $this->grupo_cursar . "_" . $nivel->nombre_grupo;
 
 
         // Creamos la carpeta

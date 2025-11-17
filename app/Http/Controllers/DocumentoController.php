@@ -11,28 +11,34 @@ use Illuminate\Support\Facades\Storage;
 
 class DocumentoController extends Controller
 {
-    public function descargar($id_grupo, $grupo, $archivo)
+    public function descargar($archivo)
     {
-        $ruta = 'documentos_nivel/' . $id_grupo . '_' . $grupo . '/' . $archivo;
 
-        if (!Storage::disk('local')->exists($ruta)) {
-            abort(404, 'El documento no existe.');
+
+        //Obtener el archivo dentro de la carpeta
+        $ruta = base64_decode($archivo);
+        //Obtener la ruta absoluta en storage
+        $rutaFisica = Storage::path($ruta);
+
+        //Verificar si existe
+        if (!Storage::exists($ruta)) {
+            abort(404, "Archivo no encontrado.");
         }
 
-        // Obtenemos el archivo desde storage/app/private (disk local)
-        $file = Storage::disk('local')->get($ruta);
-        $mime = Storage::mimeType($ruta);
+        // Obtener nombre del archivo para el navegador
+        $nombre = basename($rutaFisica);
 
-        return response($file, 200)
-            ->header('Content-Type', $mime)
-            ->header('Content-Disposition', 'inline; filename="' . basename($ruta) . '"');
+        // Mostrarlo
+        return response()->file($rutaFisica, [
+            'Content-Disposition' => 'inline; filename="' . $nombre . '"'
+        ]);
     }
 
     public function ver($id_nivel, $id_alumno, $archivo)
     {
 
         $expediente = Expediente::where('alumno_id', $id_alumno)->where('nivel_id', $id_nivel)->first();
-        $ruta = DocumentoExpediente::where('id_expediente',$expediente->id_expediente)->where('tipo_doc',$archivo)->first();
+        $ruta = DocumentoExpediente::where('id_expediente', $expediente->id_expediente)->where('tipo_doc', $archivo)->first();
         if (!Storage::disk('local')->exists($ruta->ruta_doc)) {
             abort(404, 'El documento no existe.');
         }
@@ -44,5 +50,29 @@ class DocumentoController extends Controller
         return response($file, 200)
             ->header('Content-Type', $mime)
             ->header('Content-Disposition', 'inline; filename="' . basename($ruta->ruta_doc) . '"');
+    }
+
+    public function ver_constancia($carpeta)
+    {
+
+        //Obtener el archivo dentro de la carpeta
+        $archivos = Storage::files(base64_decode($carpeta));
+
+        // Validar que existan archivos
+        if (empty($archivos)) {
+            abort(404, "La carpeta existe pero no contiene archivos.");
+        }
+
+        //Como solo hay un documento tomamos el primero
+        $archivo = $archivos[0];
+        $nombre = basename($archivo);
+
+        // Obtener ruta absoluta
+        $ruta = Storage::path($archivo);
+
+        //Mostrar el archivo en el navegador
+        return response()->file($ruta, [
+            'Content-Disposition' => 'inline; filename="' . $nombre . '"'
+        ]);
     }
 }

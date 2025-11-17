@@ -8,6 +8,8 @@
         @if (!$carta_documento)
             <h1>AQUI SE MOSTRARAN LAS CARTAS DE TERMINO CUANDO SE SUBAN AL SISTEMA</h1>
         @else
+        
+        <h1 class="text-red-500 my-3 lg:text-xl">*Se muestran las constancias que no han sido asignadas a su alumno correspondiente por lo que no se guardaran a largo plazo.</h1>
             <table
                 class="w-full text-center border border-separate rounded-lg table-auto border-gray-400 bg-gray-100 text-md">
                 <tr>
@@ -25,9 +27,7 @@
                         </td>
                         <td class="bg-white border border-white rounded-lg hover:bg-blue-800 hover:text-white">
                             <a href="{{ route('Alumno.documento.descargar', [
-                                'id_grupo' => $datos_alumno->nivel->id_nivel,
-                                'grupo' => $datos_alumno->nivel->nombre_grupo,
-                                'archivo' => basename($archivo),
+                                'archivo' => base64_encode($archivo),
                             ]) }}"
                                 target="_blank">
                                 VER

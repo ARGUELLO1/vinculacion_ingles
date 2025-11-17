@@ -44,4 +44,9 @@ class DocumentoExpediente extends Model
     {
         return $this->belongsTo(Expediente::class, 'nivel_id', 'nivel_id');
     }
+
+    public function expediente_a(): BelongsTo
+    {
+        return $this->belongsTo(Expediente::class, 'id_expediente');
+    }
 }

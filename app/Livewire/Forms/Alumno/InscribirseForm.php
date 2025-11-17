@@ -40,15 +40,26 @@ class InscribirseForm extends Form
 
 
     //DOCUMENTOS DEL FORMULARIO
-    #[Rule([
-        'documentos.solicitud_aspirante_doc' => 'required|file|mimes:pdf|max:500',
-        'documentos.linea_captura_doc' => 'required|file|mimes:pdf|max:500',
-        'documentos.comprobante_pago_doc' => 'required|file|mimes:pdf|max:500',
-        'documentos.ine_doc' => 'required|file|mimes:pdf|max:500',
-        'documentos.acta_nacimiento_doc' => 'required|file|mimes:pdf|max:500',
-        'documentos.comprobante_estudio_doc' => 'required|file|mimes:pdf|max:500',
-    ])]
-    public $documentos = [
+    #[Rule('required|file|mimes:pdf|max:500')]
+    public $solicitud_aspirante_doc=null;
+
+    #[Rule('required|file|mimes:pdf|max:500')]
+    public $linea_captura_doc=null;
+
+    #[Rule('required|file|mimes:pdf|max:500')]
+    public $comprobante_pago_doc=null;
+
+    #[Rule('required|file|mimes:pdf|max:500')]
+    public $ine_doc=null;
+
+    #[Rule('required|file|mimes:pdf|max:500')]
+    public $acta_nacimiento_doc=null;
+
+    #[Rule('required|file|mimes:pdf|max:500')]
+    public $comprobante_estudio_doc=null;
+
+    //PARA LA LÓGICA DE SUBIR DOCUMENTOS
+    public $documentos_array = [
         'solicitud_aspirante_doc' => '',
         'linea_captura_doc' => '',
         'comprobante_pago_doc' => '',
@@ -78,7 +89,7 @@ class InscribirseForm extends Form
 
 
         //Creamos la carpeta del alumno con la id alumno y dentro creamos una carpeta colocando el id_nivel como nombre
-        $ruta_expediente = "expedientes_alumno/" . $this->info_alumno->id_alumno . "_" . $this->info_alumno->matricula . "/" . $this->grupo_cursar . "_" . $nivel->nombre_grupo;
+        $ruta_expediente = "expedientesAlumnos/" . $this->info_alumno->id_alumno . "_" . $this->info_alumno->matricula . "/" . $this->grupo_cursar . "_" . $nivel->nombre_grupo;
         // Creamos la carpeta
         Storage::makeDirectory($ruta_expediente);
 
@@ -93,8 +104,18 @@ class InscribirseForm extends Form
         $expediente->fecha_entrega = $this->fecha_entrega;
         $expediente->save();
 
+        //Cargamos los documentos al arreglo
+        $this->documentos_array = [
+        'solicitud_aspirante_doc' => $this->solicitud_aspirante_doc,
+        'linea_captura_doc' => $this->linea_captura_doc,
+        'comprobante_pago_doc' => $this->comprobante_pago_doc,
+        'ine_doc' => $this->ine_doc,
+        'acta_nacimiento_doc' => $this->acta_nacimiento_doc,
+        'comprobante_estudio_doc' => $this->comprobante_estudio_doc
+    ];
+
         //Guardamos los documentos del formulario en la tabla correspondiente ("documentos_expedientes")
-        foreach ($this->documentos as $tipo_doc => $archivo) {
+        foreach ($this->documentos_array as $tipo_doc => $archivo) {
 
             //Obtenemos la extensión del archivo
             if ($archivo) {

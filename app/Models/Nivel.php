@@ -57,9 +57,9 @@ class Nivel extends Model
         return $this->hasMany(DocumentoExpediente::class, 'nivel_id', 'id_nivel');
     }
 
-    public function documentosNiveles(): HasMany
+    public function documentosNiveles(): HasOne
     {
-        return $this->hasMany(DocumentoNivel::class, 'nivel_id', 'id_nivel');
+        return $this->hasOne(DocumentoNivel::class, 'nivel_id', 'id_nivel');
     }
 
     public function documentosProfesores(): HasMany

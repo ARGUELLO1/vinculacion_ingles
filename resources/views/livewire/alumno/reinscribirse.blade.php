@@ -88,35 +88,48 @@
                     <h3 class=" bg-red-600 my-4 text-white w-full font-bold text-sm lg:text-xl text-center">DOCUMENTOS
                         EN FORMATO PDF NO MAYOR A 500KB</h3>
                 </div>
+                <fieldset wire:loading.attr="disabled"
+                    wire:target="info_formulario.documentos.constancia_nivel_anterior_doc,
+                    info_formulario.documentos.comprobante_pago_doc,
+                    info_formulario.documentos.linea_captura_doc">
 
-                <div class="mb-2">
-                    <label class="lg:text-xl font-bold" for="soli_aspirante" id="file-label">
-                        <span>CONSTANCIA DE NIVEL ANTERIOR</span></label>
-                    <input
-                        class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
-                        type="file" name="soli_aspirante"
-                        wire:model="info_formulario.documentos.constancia_nivel_anterior_doc">
-                    <x-input-error-rule for="info_formulario.documentos.constancia_nivel_anterior_doc" />
-                </div>
+                    <div class="text-blue-700 font-bold my-2 hidden" wire:loading.class.remove="hidden"
+                        wire:target="info_formulario.documentos.constancia_nivel_anterior_doc,
+                     info_formulario.documentos.comprobante_pago_doc,
+                     info_formulario.documentos.linea_captura_doc">
+                        Subiendo documento...
+                    </div>
 
-                <div class="mb-2">
-                    <label class="lg:text-xl font-bold" for="comp_pago" id="file-label2">
-                        <span>COMPROBANTE DE PAGO</span></label>
-                    <input
-                        class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
-                        type="file" name="comp_pago" wire:model="info_formulario.documentos.comprobante_pago_doc">
-                    <x-input-error-rule for="info_formulario.documentos.comprobante_pago_doc" />
-                </div>
+                    <div class="mb-2">
+                        <label class="lg:text-xl font-bold" for="soli_aspirante" id="file-label">
+                            <span>CONSTANCIA DE NIVEL ANTERIOR</span></label>
+                        <input
+                            class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
+                            type="file" name="soli_aspirante"
+                            wire:model="info_formulario.documentos.constancia_nivel_anterior_doc">
+                        <x-input-error-rule for="info_formulario.documentos.constancia_nivel_anterior_doc" />
+                    </div>
 
-                <div class="mb-2">
-                    <label class="lg:text-xl font-bold" for="comp_estudios" id="file-label5">
-                        <span>LINEA DE CAPTURA</span></label>
-                    <input
-                        class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
-                        type="file" name="comp_estudios" wire:model="info_formulario.documentos.linea_captura_doc">
-                    <x-input-error-rule for="info_formulario.documentos.linea_captura_doc" />
-                </div>
+                    <div class="mb-2">
+                        <label class="lg:text-xl font-bold" for="comp_pago" id="file-label2">
+                            <span>COMPROBANTE DE PAGO</span></label>
+                        <input
+                            class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
+                            type="file" name="comp_pago"
+                            wire:model="info_formulario.documentos.comprobante_pago_doc">
+                        <x-input-error-rule for="info_formulario.documentos.comprobante_pago_doc" />
+                    </div>
 
+                    <div class="mb-2">
+                        <label class="lg:text-xl font-bold" for="comp_estudios" id="file-label5">
+                            <span>LINEA DE CAPTURA</span></label>
+                        <input
+                            class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
+                            type="file" name="comp_estudios"
+                            wire:model="info_formulario.documentos.linea_captura_doc">
+                        <x-input-error-rule for="info_formulario.documentos.linea_captura_doc" />
+                    </div>
+                </fieldset>
                 <button
                     class="border-2 text-blue-800 border-blue-800 hover:bg-blue-800 hover:text-white rounded-lg mt-5 lg:text-xl w-full lg:text-center ">REINSCRIBIRSE</button>
             </form>

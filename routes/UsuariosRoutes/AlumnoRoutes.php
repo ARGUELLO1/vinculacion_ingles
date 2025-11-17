@@ -20,8 +20,9 @@ Route::prefix('alumno')->name('Alumno.')->middleware(['auth', 'role:alumno'])->g
     Route::get('/reinscribirse', Reinscribirse::class)->name('reinscribirse');
     Route::get('/cartas_de_termino', Carterm::class)->name('carterm');
     Route::get('/nivelesanteriores', NivelesAnteriores::class)->name('nivelesanteriores');
-    Route::get('/descargar/{id_grupo}/{grupo}/{archivo}', [DocumentoController::class, 'descargar'])->name('documento.descargar');
+    Route::get('/descargar/{archivo}', [DocumentoController::class, 'descargar'])->name('documento.descargar');
     Route::get('/ver/{nivel}/{alumno}/{archivo}', [DocumentoController::class, 'ver'])->name('documento.ver');
+    Route::get('/ver/{carpeta}', [DocumentoController::class, 'ver_constancia'])->name('constancia.ver');
 
 
 

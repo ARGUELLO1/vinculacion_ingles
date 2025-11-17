@@ -13,6 +13,33 @@
                 {{ $info_alumno->ap_materno }}</h1>
 
             @if ($info_alumno->nivel)
+
+                @if ($constancia!=null)
+                    <div class="mb-2">
+                        <table
+                            class="w-full text-center border border-separate rounded-lg table-auto border-gray-400 bg-gray-100 text-md">
+                            <tr>
+                                <th class="bg-blue-800 text-white" colspan="2">CONSTANCIA DEL NIVEL</th>
+                            </tr>
+                            <tr>
+                                <td class="">DOCUMENTO</th>
+                                <td class="">OPCIÓN</th>
+                            </tr>
+                            <tr class="text-sm lg:text-lg ">
+                                <td class="bg-white border border-white rounded-lg">
+                                    Constancia_{{$info_alumno->nombre}}
+                                </td>
+                                <td class="bg-white border border-white rounded-lg">
+                                    <a href="{{route('Alumno.documento.descargar',[
+                                    'archivo' => base64_encode($constancia[0]),
+                                    ])}}" target="_blank">VER</a>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                @endif
+
                 <div class="mb-2 overflow-x-auto">
                     <table
                         class="w-full text-center border border-separate rounded-lg table-auto border-gray-400 bg-gray-100 text-md">
@@ -53,7 +80,8 @@
                 </div>
 
                 <div class="mb-2">
-                    <table class="w-full text-center border border-separate rounded-lg table-auto border-gray-400 bg-gray-100 text-md">
+                    <table
+                        class="w-full text-center border border-separate rounded-lg table-auto border-gray-400 bg-gray-100 text-md">
                         <tr>
                             <th class="bg-blue-800 text-white" colspan="2">DOCUMENTOS SUBIDOS AL SISTEMA</th>
                         </tr>
@@ -64,12 +92,12 @@
                         @foreach ($documentos->documentosExpedientes as $documento)
                             <tr>
                                 <td class="bg-white border border-white rounded-lg">{{ $documento->tipo_doc }}</td>
-                                <td class="bg-white border border-white rounded-lg hover:bg-blue-800 hover:text-white"><a href="{{ route('Alumno.documento.ver', [
-                                    'nivel' => $info_alumno->nivel_id,
-                                    'alumno' => $info_alumno->id_alumno,
-                                    'archivo' => $documento->tipo_doc,
-                                ]) }}"
-                                        target="_blank">VER</a></td>
+                                <td class="bg-white border border-white rounded-lg hover:bg-blue-800 hover:text-white">
+                                    <a href="{{ route('Alumno.documento.descargar', [
+                                        'archivo' => base64_encode($documento->ruta_doc),
+                                    ]) }}"
+                                        target="_blank">VER</a>
+                                </td>
                             </tr>
                         @endforeach
                     </table>

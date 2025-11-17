@@ -5,6 +5,7 @@ namespace App\Livewire\Alumno;
 use App\Models\DocumentoNivel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class Carterm extends Component
@@ -24,7 +25,13 @@ class Carterm extends Component
             //Ruta de la carpeta en donde estan las cartas de termino
             if ($this->carta_documento) {
                 //obtenemos el nombre de todos los archivos que existen en esa carpeta
-                $this->archivos = Storage::files($this->carta_documento->ruta_doc);
+                $subcarpetas = Storage::allDirectories($this->carta_documento->ruta_doc);
+                $carpeta = $this->carta_documento->ruta_doc;
+                $nom_car = 'No';
+                $this->archivos = collect($subcarpetas)->first(function ($carpeta) use ($nom_car) {
+                    return Str::startsWith(basename($carpeta), $nom_car);
+                });
+                $this->archivos = Storage::allFiles($this->archivos);
             }
         }
     }

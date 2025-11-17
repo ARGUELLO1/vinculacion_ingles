@@ -8,6 +8,8 @@ use App\Models\Expediente;
 use App\Models\Nivel;
 use App\Models\Nota;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Livewire\Component;
 
 class NivelesAnteriores extends Component
@@ -51,20 +53,44 @@ class NivelesAnteriores extends Component
         //Información de expedientes, se sacan todos los expedientes ya que corresponde a los niveles cursados por el alumno
         $this->expediente = Expediente::where('alumno_id', $this->info_alumno->id_alumno)->get();
         foreach ($this->expediente as $expediente) {
-            $nivel_finalizado = DocumentoNivel::where('nivel_id', $expediente->nivel_id)->first() ?? '';
-            if (!$nivel_finalizado == '') {
-                $info_nivel = Nivel::find($expediente->nivel_id);
-                $expediente->nivel_texto = $info_nivel->nivel;
-                $expediente->grupo_texto = $info_nivel->nombre_grupo;
-                $expediente->periodo_texto = $info_nivel->periodo->periodo;
-                $expediente->maestro_texto = $info_nivel->profesor->nombre . ' ' . $info_nivel->profesor->ap_paterno;
 
-                $nota_nivel = Nota::where('nivel_id', $expediente->nivel_id)->where('alumno_id', $this->info_alumno->id_alumno)->first();
-                $expediente->nota_parcial_1_texto = $nota_nivel->nota_parcial_1;
-                $expediente->nota_parcial_2_texto = $nota_nivel->nota_parcial_2;
-                $expediente->nota_parcial_3_texto = $nota_nivel->nota_parcial_3;
-                $expediente->nota_final_texto = number_format($nota_nivel->promedio, 2);
+            //Verificamos si el nivel ya termino (Si existe la carpeta constancias en el nivel)
+            $info_nivel = DocumentoNivel::where('nivel_id', $expediente->nivel_id)->first();
+            $info_nivel == null ? $carpetas = '' : $carpetas = Storage::allDirectories($info_nivel->ruta_doc);
+            $nivel_finalizado = collect($carpetas)->contains(function ($carpeta) {
+                return basename($carpeta) === 'Constancias';
+            });
+
+            if ($nivel_finalizado) {
+                //Sacamos la constancia del alumno
+                $carpeta =  Storage::directories($info_nivel->ruta_doc);
+                $matricula = $this->info_alumno->matricula;
+                $subcarpetas = Storage::allDirectories($info_nivel->ruta_doc);
+                $expediente->ruta_const = collect($subcarpetas)->first(function ($carpeta) use ($matricula) {
+                    return Str::startsWith(basename($carpeta), $matricula);
+                });
+                if ($expediente->ruta_const != null) {
+                    $expediente->ruta_const = collect(Storage::files($expediente->ruta_const))->first();
+                }
+
+                //Parametro para indicar que el nivel finalizó
+                $expediente->finalizado = 1;
+            } else {
+                $expediente->finalizado = 0;
             }
+            $info_nivel = Nivel::find($expediente->nivel_id);
+            $expediente->nivel_texto = $info_nivel->nivel;
+            $expediente->grupo_texto = $info_nivel->nombre_grupo;
+            $expediente->periodo_texto = $info_nivel->periodo->periodo;
+            $expediente->maestro_texto = $info_nivel->profesor->nombre . ' ' . $info_nivel->profesor->ap_paterno;
+
+
+
+            $nota_nivel = Nota::where('nivel_id', $expediente->nivel_id)->where('alumno_id', $this->info_alumno->id_alumno)->first();
+            $expediente->nota_parcial_1_texto = $nota_nivel->nota_parcial_1;
+            $expediente->nota_parcial_2_texto = $nota_nivel->nota_parcial_2;
+            $expediente->nota_parcial_3_texto = $nota_nivel->nota_parcial_3;
+            $expediente->nota_final_texto = number_format($nota_nivel->promedio, 2);
         }
     }
 
