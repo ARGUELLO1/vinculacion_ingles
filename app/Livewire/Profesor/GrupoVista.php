@@ -6,7 +6,10 @@ use App\Models\Nivel;
 use App\Models\Nota;
 use App\Models\Asistencia;
 use App\Models\Alumno;
+use App\Models\DocumentoProfesor;
 use Livewire\Component;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Livewire\WithPagination;
 
 class GrupoVista extends Component
@@ -159,9 +162,42 @@ class GrupoVista extends Component
     {
         $this->resetPage();
     }
+   public function descargarPlaneacion()
+    {
+        
+        $documento = DocumentoProfesor::where('nivel_id', $this->grupo->id_nivel)
+                              ->where('tipo_doc', 'planeacion')
+                              ->first();
 
+        if (!$documento) {
+            $this->dispatch('alerta-error', ['mensaje' => 'No se encontró el documento de planeación.']);
+            return;
+        }
+
+
+        $rutaRelativa = 'expedientesProfesores/' . $documento->ruta_doc;
+
+        $rutaNormalizada = str_replace('/', DIRECTORY_SEPARATOR, $rutaRelativa);
+
+
+        $rutaAbsolutaManual = storage_path('app') . DIRECTORY_SEPARATOR . $rutaNormalizada;
+
+        
+        if (!file_exists($rutaAbsolutaManual)) {
+ 
+            $this->dispatch('alerta-error', ['mensaje' => 'Archivo no encontrado (verificación manual).']);
+            return;
+        }
+        
+
+        return response()->download($rutaAbsolutaManual);
+        
+     
+    }
     public function render()
     {
+
+        
         if ($this->isConcluido) {
             $alumnoIds = Nota::where('nivel_id', $this->grupo->id_nivel)
                 ->pluck('alumno_id')
@@ -191,7 +227,6 @@ class GrupoVista extends Component
         }
 
         $alumnosQuery->orderBy('ap_paterno')->orderBy('ap_materno')->orderBy('nombre');
-
         return view('livewire.profesor.grupo-vista', [
             'alumnos' => $alumnosQuery->paginate(15),
             'parcialActivo' => $this->parcialActivo,

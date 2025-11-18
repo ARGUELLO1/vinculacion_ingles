@@ -8,6 +8,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Models\Profesor;
+use App\Models\Periodo;
+use App\Models\Alumno;
+use App\Models\DocumentoExpediente;
+use App\Models\DocumentoNivel;
+use App\Models\DocumentoProfesor;
+use App\Models\Expediente;
+use App\Models\Modalidad;
+use App\Models\Asistencia;
+use App\Models\Nota;
 
 class Nivel extends Model
 {
@@ -24,6 +34,7 @@ class Nivel extends Model
         'horario',
         'profesor_id',
         'modalidad_id',
+        'periodo_id',
         'parcial_1',
         'parcial_2',
         'parcial_3',
@@ -44,6 +55,7 @@ class Nivel extends Model
 
     public function periodo(): BelongsTo
     {
+       
         return $this->belongsTo(Periodo::class, 'periodo_id', 'id_periodo');
     }
 
@@ -87,7 +99,8 @@ class Nivel extends Model
         return $this->hasMany(Nota::class, 'nivel_id', 'id_nivel');
     }
 
-    public function expediente(): HasOne{
+    public function expediente(): HasOne
+    {
         return $this->hasOne(Expediente::class, 'id_nivel');
     }
 
@@ -207,5 +220,16 @@ class Nivel extends Model
     public function getEstadoNivelAttribute(): string
     {
         return $this->nivel_concluido ? 'Concluido' : 'Activo';
+    }
+
+
+    public function scopeActivos($query)
+    {
+        return $query->where('nivel_concluido', 0);
+    }
+
+    public function scopeConcluidos($query)
+    {
+        return $query->where('nivel_concluido', 1);
     }
 }

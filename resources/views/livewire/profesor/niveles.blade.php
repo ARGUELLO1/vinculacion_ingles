@@ -7,7 +7,7 @@
     <div class="min-h-screen bg-no-repeat bg-cover bg-center" style="background-image: url('/images/exp.jpg');">
         <div class="relative z-10 py-12 px-6">
 
-           
+
             <div class="max-w-7xl mx-auto mb-6">
                 <div class="flex justify-center rounded-lg shadow-sm" role="group">
                     <button type="button"
@@ -39,7 +39,7 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                   
+
                     @forelse ($nivelesDisponibles as $nivel)
 
                     <div class="bg-white/90 backdrop-blur-md rounded-xl shadow-lg p-6 border border-white/30 
@@ -142,9 +142,9 @@
                                         {{ $grupo->alumnos_count }}/{{ $grupo->cupo_max }}
                                     </span>
                                 </div>
-
                                 <p class="text-gray-500 text-base mb-5">
-                                    Semestral / Presencial
+                                    {{-- Mostramos Periodo Y Modalidad con las columnas correctas --}}
+                                    {{ $grupo->modalidad->tipo_modalidad ?? 'Modalidad N/A' }}
                                 </p>
 
                                 <div class="space-y-3">
@@ -174,7 +174,7 @@
 
                         <div class="bg-gray-50 border-t border-gray-100 rounded-b-xl px-6 py-4">
                             <p class="text-gray-500 text-sm">
-                                Periodo: {{ $grupo->periodo->nombre ?? 'N/A' }}
+                                Periodo: {{ $grupo->periodo->periodo ?? 'N/A' }}
                             </p>
                         </div>
                     </div>

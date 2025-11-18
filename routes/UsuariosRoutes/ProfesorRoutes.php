@@ -9,5 +9,6 @@ Route::middleware(['auth', 'role:profesor'])->group(function () {
     Route::get('/profesor/dashboard', ProfesorDashboard::class)->name('profesor.dashboard');
     Route::get('/profesor/niveles', Niveles::class)->name('niveles');
     Route::get('/grupo/{grupo}', GrupoVista::class)->name('profesor.grupo.vista');
+
     // aquí luego puedes agregar más rutas del profesor, p.ej. grupos, calificaciones, etc.
 });

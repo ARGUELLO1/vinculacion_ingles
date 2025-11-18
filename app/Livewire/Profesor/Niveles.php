@@ -78,7 +78,7 @@ class Niveles extends Component
                 $query->concluidos();
             })
             ->withCount('alumnos')
-            ->with(['periodo'])
+           ->with(['periodo', 'modalidad']) 
             ->orderBy('nombre_grupo')
             ->get();
       
