@@ -55,6 +55,7 @@ class Inscribirse extends Component
         $this->info_formulario->validate();
         $this->info_formulario->save();
         $this->info_formulario->reset();
+        session()->flash('success', 'Proceso realizado con éxito');
         redirect()->route('Alumno.principal');
     }
 

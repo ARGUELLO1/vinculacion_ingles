@@ -7,6 +7,12 @@
     </x-slot>
     <div class="flex flex-col bg-white font-semibold shadow rounded-lg m-4 lg:p-6 lg:m-3">
 
+        @if (Session('success'))
+        <div class="bg-green-300 border border-green-600 shadow rounded lg:p-4">
+            <h1 class="text-green-900 font-bold text-center lg:text-xl">{{Session('success')}}</h1>
+        </div>
+        @endif
+
         @if ($info_alumno->nombre && $info_alumno->ap_paterno && $info_alumno->ap_materno)
             <h1 class="text-blue-800 text-center text-3xl p-4 lg:text-5xl lg:mb-3">BIENVENIDO</h1>
             <h1 class="text-2xl text-center mb-8 lg:text-5xl ">{{ $info_alumno->nombre }} {{ $info_alumno->ap_paterno }}
