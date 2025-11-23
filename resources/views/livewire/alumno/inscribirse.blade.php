@@ -60,113 +60,130 @@
 
 
                         @forelse ($info_formulario->grupos as $grupo)
-                            @if ($grupo->cantidad_alumnos >= $grupo->cupo_max)
-                                <option disabled value="{{ $grupo->id_nivel }}">
+                            @switch($grupo)
+                                @case($grupo->cantidad_alumnos >= $grupo->cupo_max)
+                                    {{-- NIVEL LLENO --}}
+                                    {{-- <option disabled value="{{ $grupo->id_nivel }}">
                                     Grupo: {{ $grupo->nombre_grupo }} -
                                     Aula: {{ $grupo->aula }} -
                                     Horario: {{ $grupo->horario }} -
                                     Profesor: {{ $grupo->profesor->nombre }} {{ $grupo->profesor->ap_paterno }} -
                                     Modalidad: {{ $grupo->modalidad->tipo_modalidad }} -
-                                    Cupo: {{ $grupo->cantidad_alumnos }}/{{ $grupo->cupo_max }}</option>
-                            @else
-                                <option value="{{ $grupo->id_nivel }}">
+                                    Cupo: {{ $grupo->cantidad_alumnos }}/{{ $grupo->cupo_max }}</option> --}}
+                                @break
+
+                                @case($grupo->nivel_concluido == 1)
+                                    {{-- NIVEL CONCLUIDO --}}
+                                    {{-- <option disabled value="{{ $grupo->id_nivel }}">
                                     Grupo: {{ $grupo->nombre_grupo }} -
                                     Aula: {{ $grupo->aula }} -
                                     Horario: {{ $grupo->horario }} -
                                     Profesor: {{ $grupo->profesor->nombre }} {{ $grupo->profesor->ap_paterno }} -
-                                    Modalidad: {{ $grupo->modalidad->tipo_modalidad }}</option>
-                            @endif
-                        @empty
-                            <option disabled value=''>No hay grupos disponibles para este nivel</option>
-                        @endforelse
-                        <option value="" disabled selected>Selecciona un grupo...</option>
-                    </select>
-                    <x-input-error-rule for="info_formulario.grupo_cursar" />
-                </div>
+                                    Modalidad: {{ $grupo->modalidad->tipo_modalidad }} -
+                                    NIVEL FINALIZADO</option> --}}
+                                @break
 
-                <div class="mb-2">
-                    <h3 class=" bg-red-600 my-4 text-white w-full font-bold text-sm lg:text-xl text-center">DOCUMENTOS
-                        EN FORMATO
-                        .PDF NO MAYOR A 500KB </h3>
-                </div>
-                <fieldset wire:loading.attr="disabled"
-                    wire:target="info_formulario.solicitud_aspirante_doc,
-                    info_formulario.linea_captura_doc, 
-                    info_formulario.comprobante_pago_doc, 
-                    info_formulario.ine_doc,
-                    info_formulario.acta_nacimiento_doc, 
-                    info_formulario.comprobante_estudio_doc">
+                                @default
+                                    <option value="{{ $grupo->id_nivel }}">
+                                        Grupo: {{ $grupo->nombre_grupo }} -
+                                        Aula: {{ $grupo->aula }} -
+                                        Horario: {{ $grupo->horario }} -
+                                        Profesor: {{ $grupo->profesor->nombre }} {{ $grupo->profesor->ap_paterno }} -
+                                        Modalidad: {{ $grupo->modalidad->tipo_modalidad }}
+                                    </option>
+                            @endswitch
 
-                    <div class="text-blue-700 font-bold my-2 hidden" wire:loading.class.remove="hidden"
+                            @empty
+                                <option disabled value=''>No hay grupos disponibles para este nivel</option>
+                            @endforelse
+                            <option value="" disabled selected>Selecciona un grupo...</option>
+                        </select>
+                        <x-input-error-rule for="info_formulario.grupo_cursar" />
+                    </div>
+
+                    <div class="mb-2">
+                        <h3 class=" bg-red-600 my-4 text-white w-full font-bold text-sm lg:text-xl text-center">DOCUMENTOS
+                            EN FORMATO
+                            .PDF NO MAYOR A 500KB </h3>
+                    </div>
+                    <fieldset wire:loading.attr="disabled"
                         wire:target="info_formulario.solicitud_aspirante_doc,
                     info_formulario.linea_captura_doc, 
                     info_formulario.comprobante_pago_doc, 
                     info_formulario.ine_doc,
                     info_formulario.acta_nacimiento_doc, 
                     info_formulario.comprobante_estudio_doc">
-                        Subiendo documento...
-                    </div>
 
-                    <div class="mb-2">
-                        <label class="lg:text-xl font-bold" for="soli_aspirante" id="file-label">
-                            <span>SOLICITUD DE ASPIRANTE</span></label>
-                        <input
-                            class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
-                            type="file" name="soli_aspirante" id="soli_aspirante"
-                            wire:model.live="info_formulario.solicitud_aspirante_doc">
-                        <x-input-error-rule for="info_formulario.solicitud_aspirante_doc" />
-                    </div>
+                        <div class="text-blue-700 font-bold my-2 hidden" wire:loading.class.remove="hidden"
+                            wire:target="info_formulario.solicitud_aspirante_doc,
+                    info_formulario.linea_captura_doc, 
+                    info_formulario.comprobante_pago_doc, 
+                    info_formulario.ine_doc,
+                    info_formulario.acta_nacimiento_doc, 
+                    info_formulario.comprobante_estudio_doc">
+                            Subiendo documento...
+                        </div>
 
-                    <div class="mb-2">
-                        <label class="lg:text-xl font-bold" for="lin_captura_d" id="file-label1">
-                            <span>LINEA DE CAPTURA</span></label>
-                        <input
-                            class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
-                            type="file" name="lin_captura_d" wire:model.live="info_formulario.linea_captura_doc">
-                        <x-input-error-rule for="info_formulario.linea_captura_doc" />
-                    </div>
+                        <div class="mb-2">
+                            <label class="lg:text-xl font-bold" for="soli_aspirante" id="file-label">
+                                <span>SOLICITUD DE ASPIRANTE</span></label>
+                            <input
+                                class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
+                                type="file" name="soli_aspirante" id="soli_aspirante"
+                                wire:model.live="info_formulario.solicitud_aspirante_doc">
+                            <x-input-error-rule for="info_formulario.solicitud_aspirante_doc" />
+                        </div>
 
-                    <div class="mb-2">
-                        <label class="lg:text-xl font-bold" for="comp_pago" id="file-label2">
-                            <span>COMPROBANTE DE PAGO</span></label>
-                        <input
-                            class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
-                            type="file" name="comp_pago" wire:model.live="info_formulario.comprobante_pago_doc">
-                        <x-input-error-rule for="info_formulario.comprobante_pago_doc" />
-                    </div>
+                        <div class="mb-2">
+                            <label class="lg:text-xl font-bold" for="lin_captura_d" id="file-label1">
+                                <span>LINEA DE CAPTURA</span></label>
+                            <input
+                                class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
+                                type="file" name="lin_captura_d" wire:model.live="info_formulario.linea_captura_doc">
+                            <x-input-error-rule for="info_formulario.linea_captura_doc" />
+                        </div>
 
-                    <div class="mb-2">
-                        <label class="lg:text-xl font-bold" for="ine" id="file-label3">
-                            <span>INE</span></label>
-                        <input
-                            class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
-                            type="file" name="ine" wire:model.live="info_formulario.ine_doc">
-                        <x-input-error-rule for="info_formulario.ine_doc" />
-                    </div>
+                        <div class="mb-2">
+                            <label class="lg:text-xl font-bold" for="comp_pago" id="file-label2">
+                                <span>COMPROBANTE DE PAGO</span></label>
+                            <input
+                                class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
+                                type="file" name="comp_pago" wire:model.live="info_formulario.comprobante_pago_doc">
+                            <x-input-error-rule for="info_formulario.comprobante_pago_doc" />
+                        </div>
 
-                    <div class="mb-2">
-                        <label class="lg:text-xl font-bold" for="act_nacimiento" id="file-label4">
-                            <span>ACTA DE NACIMIENTO</span></label>
-                        <input
-                            class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
-                            type="file" name="act_nacimiento"
-                            wire:model.live="info_formulario.acta_nacimiento_doc">
-                        <x-input-error-rule for="info_formulario.acta_nacimiento_doc" />
-                    </div>
+                        <div class="mb-2">
+                            <label class="lg:text-xl font-bold" for="ine" id="file-label3">
+                                <span>INE</span></label>
+                            <input
+                                class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
+                                type="file" name="ine" wire:model.live="info_formulario.ine_doc">
+                            <x-input-error-rule for="info_formulario.ine_doc" />
+                        </div>
 
-                    <div class="mb-2">
-                        <label class="lg:text-xl font-bold" for="comp_estudios" id="file-label5">
-                            <span>COMRPOBANTE DE ESTUDIOS</span></label>
-                        <input
-                            class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
-                            type="file" name="comp_estudios"
-                            wire:model.live="info_formulario.comprobante_estudio_doc">
-                        <x-input-error-rule for="info_formulario.comprobante_estudio_doc" />
-                    </div>
-                </fieldset>
-                <button
-                    class="border-2 text-blue-800 border-blue-800 hover:bg-blue-800 hover:text-white rounded-lg mt-5 lg:text-xl w-full lg:text-center ">INSCRIBIRSE</button>
-            </form>
-        @endif
+                        <div class="mb-2">
+                            <label class="lg:text-xl font-bold" for="act_nacimiento" id="file-label4">
+                                <span>ACTA DE NACIMIENTO</span></label>
+                            <input
+                                class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
+                                type="file" name="act_nacimiento"
+                                wire:model.live="info_formulario.acta_nacimiento_doc">
+                            <x-input-error-rule for="info_formulario.acta_nacimiento_doc" />
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="lg:text-xl font-bold" for="comp_estudios" id="file-label5">
+                                <span>COMRPOBANTE DE ESTUDIOS</span></label>
+                            <input
+                                class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
+                                type="file" name="comp_estudios"
+                                wire:model.live="info_formulario.comprobante_estudio_doc">
+                            <x-input-error-rule for="info_formulario.comprobante_estudio_doc" />
+                        </div>
+                    </fieldset>
+                    <button
+                        class="border-2 text-blue-800 border-blue-800 hover:bg-blue-800 hover:text-white rounded-lg mt-5 lg:text-xl w-full lg:text-center ">INSCRIBIRSE</button>
+                </form>
+            @endif
+        </div>
     </div>
-</div>

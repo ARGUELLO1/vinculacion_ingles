@@ -19,6 +19,7 @@ class NivelesAnteriores extends Component
     public $expediente;
     public $niveles;
     public $documentos_nivel;
+    public $tabla=false;
 
     //MODAL
     public $open = false;
@@ -75,6 +76,7 @@ class NivelesAnteriores extends Component
 
                 //Parametro para indicar que el nivel finalizó
                 $expediente->finalizado = 1;
+                $this->tabla=true;
             } else {
                 $expediente->finalizado = 0;
             }

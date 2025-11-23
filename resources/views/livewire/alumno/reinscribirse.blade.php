@@ -59,81 +59,98 @@
                     <select class="w-full" name="selec_grupo" wire:model.live="info_formulario.grupo_cursar">
 
                         @forelse ($info_formulario->grupos as $grupo)
-                            @if ($grupo->cantidad_alumnos >= $grupo->cupo_max)
-                                <option disabled value="{{ $grupo->id_nivel }}">
+                            @switch($grupo)
+                                @case($grupo->cantidad_alumnos >= $grupo->cupo_max)
+                                {{--NIVEL LLENO--}}
+                                   {{--<option disabled value="{{ $grupo->id_nivel }}">
                                     Grupo: {{ $grupo->nombre_grupo }} -
                                     Aula: {{ $grupo->aula }} -
                                     Horario: {{ $grupo->horario }} -
                                     Profesor: {{ $grupo->profesor->nombre }} {{ $grupo->profesor->ap_paterno }} -
                                     Modalidad: {{ $grupo->modalidad->tipo_modalidad }} -
-                                    Cupo: {{ $grupo->cantidad_alumnos }}/{{ $grupo->cupo_max }}</option>
-                            @else
-                                <option value="{{ $grupo->id_nivel }}">
+                                    Cupo: {{ $grupo->cantidad_alumnos }}/{{ $grupo->cupo_max }}</option>--}}
+                                @break
+
+                                @case($grupo->nivel_concluido == 1)
+                                {{--NIVEL CONCLUIDO --}}
+                                  {{-- <option disabled value="{{ $grupo->id_nivel }}">
                                     Grupo: {{ $grupo->nombre_grupo }} -
                                     Aula: {{ $grupo->aula }} -
                                     Horario: {{ $grupo->horario }} -
                                     Profesor: {{ $grupo->profesor->nombre }} {{ $grupo->profesor->ap_paterno }} -
-                                    Modalidad: {{ $grupo->modalidad->tipo_modalidad }}
-                                </option>
-                            @endif
-                        @empty
-                            <option value='' disabled>No hay grupos disponibles para este nivel</option>
-                        @endforelse
-                        <option value="" disabled selected>Selecciona un grupo...</option>
-                    </select>
-                    <x-input-error-rule for="info_formulario.grupo_cursar" />
-                </div>
+                                    Modalidad: {{ $grupo->modalidad->tipo_modalidad }} -
+                                    NIVEL FINALIZADO</option>--}}
+                                @break
 
-                <div class="mb-2">
-                    <h3 class=" bg-red-600 my-4 text-white w-full font-bold text-sm lg:text-xl text-center">DOCUMENTOS
-                        EN FORMATO PDF NO MAYOR A 500KB</h3>
-                </div>
-                <fieldset wire:loading.attr="disabled"
-                    wire:target="info_formulario.documentos.constancia_nivel_anterior_doc,
+                                @default
+                                    <option value="{{ $grupo->id_nivel }}">
+                                        Grupo: {{ $grupo->nombre_grupo }} -
+                                        Aula: {{ $grupo->aula }} -
+                                        Horario: {{ $grupo->horario }} -
+                                        Profesor: {{ $grupo->profesor->nombre }} {{ $grupo->profesor->ap_paterno }} -
+                                        Modalidad: {{ $grupo->modalidad->tipo_modalidad }}
+                                    </option>
+                            @endswitch
+
+
+                            @empty
+                                <option value='' disabled>No hay grupos disponibles para este nivel</option>
+                            @endforelse
+                            <option value="" disabled selected>Selecciona un grupo...</option>
+                        </select>
+                        <x-input-error-rule for="info_formulario.grupo_cursar" />
+                    </div>
+
+                    <div class="mb-2">
+                        <h3 class=" bg-red-600 my-4 text-white w-full font-bold text-sm lg:text-xl text-center">DOCUMENTOS
+                            EN FORMATO PDF NO MAYOR A 500KB</h3>
+                    </div>
+                    <fieldset wire:loading.attr="disabled"
+                        wire:target="info_formulario.documentos.constancia_nivel_anterior_doc,
                     info_formulario.documentos.comprobante_pago_doc,
                     info_formulario.documentos.linea_captura_doc">
 
-                    <div class="text-blue-700 font-bold my-2 hidden" wire:loading.class.remove="hidden"
-                        wire:target="info_formulario.documentos.constancia_nivel_anterior_doc,
+                        <div class="text-blue-700 font-bold my-2 hidden" wire:loading.class.remove="hidden"
+                            wire:target="info_formulario.documentos.constancia_nivel_anterior_doc,
                      info_formulario.documentos.comprobante_pago_doc,
                      info_formulario.documentos.linea_captura_doc">
-                        Subiendo documento...
-                    </div>
+                            Subiendo documento...
+                        </div>
 
-                    <div class="mb-2">
-                        <label class="lg:text-xl font-bold" for="soli_aspirante" id="file-label">
-                            <span>CONSTANCIA DE NIVEL ANTERIOR</span></label>
-                        <input
-                            class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
-                            type="file" name="soli_aspirante"
-                            wire:model="info_formulario.documentos.constancia_nivel_anterior_doc">
-                        <x-input-error-rule for="info_formulario.documentos.constancia_nivel_anterior_doc" />
-                    </div>
+                        <div class="mb-2">
+                            <label class="lg:text-xl font-bold" for="soli_aspirante" id="file-label">
+                                <span>CONSTANCIA DE NIVEL ANTERIOR</span></label>
+                            <input
+                                class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
+                                type="file" name="soli_aspirante"
+                                wire:model="info_formulario.documentos.constancia_nivel_anterior_doc">
+                            <x-input-error-rule for="info_formulario.documentos.constancia_nivel_anterior_doc" />
+                        </div>
 
-                    <div class="mb-2">
-                        <label class="lg:text-xl font-bold" for="comp_pago" id="file-label2">
-                            <span>COMPROBANTE DE PAGO</span></label>
-                        <input
-                            class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
-                            type="file" name="comp_pago"
-                            wire:model="info_formulario.documentos.comprobante_pago_doc">
-                        <x-input-error-rule for="info_formulario.documentos.comprobante_pago_doc" />
-                    </div>
+                        <div class="mb-2">
+                            <label class="lg:text-xl font-bold" for="comp_pago" id="file-label2">
+                                <span>COMPROBANTE DE PAGO</span></label>
+                            <input
+                                class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
+                                type="file" name="comp_pago"
+                                wire:model="info_formulario.documentos.comprobante_pago_doc">
+                            <x-input-error-rule for="info_formulario.documentos.comprobante_pago_doc" />
+                        </div>
 
-                    <div class="mb-2">
-                        <label class="lg:text-xl font-bold" for="comp_estudios" id="file-label5">
-                            <span>LINEA DE CAPTURA</span></label>
-                        <input
-                            class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
-                            type="file" name="comp_estudios"
-                            wire:model="info_formulario.documentos.linea_captura_doc">
-                        <x-input-error-rule for="info_formulario.documentos.linea_captura_doc" />
-                    </div>
-                </fieldset>
-                <button
-                    class="border-2 text-blue-800 border-blue-800 hover:bg-blue-800 hover:text-white rounded-lg mt-5 lg:text-xl w-full lg:text-center ">REINSCRIBIRSE</button>
-            </form>
-        @endif
+                        <div class="mb-2">
+                            <label class="lg:text-xl font-bold" for="comp_estudios" id="file-label5">
+                                <span>LINEA DE CAPTURA</span></label>
+                            <input
+                                class="file:py-2 file:border-none focus:outline-none file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 focus:ring-blue-500 bg-gray-200 text-gray-700 border border-gray-300 cursor-pointer w-full file-input"
+                                type="file" name="comp_estudios"
+                                wire:model="info_formulario.documentos.linea_captura_doc">
+                            <x-input-error-rule for="info_formulario.documentos.linea_captura_doc" />
+                        </div>
+                    </fieldset>
+                    <button
+                        class="border-2 text-blue-800 border-blue-800 hover:bg-blue-800 hover:text-white rounded-lg mt-5 lg:text-xl w-full lg:text-center ">REINSCRIBIRSE</button>
+                </form>
+            @endif
 
+        </div>
     </div>
-</div>
