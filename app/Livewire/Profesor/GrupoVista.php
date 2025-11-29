@@ -30,10 +30,11 @@ class GrupoVista extends Component
     public bool $isConcluido = false;
 
     protected array $rules = [
-        'calificaciones.*.nota_parcial_1' => 'nullable|numeric|min:0|max:99.9',
-        'calificaciones.*.nota_parcial_2' => 'nullable|numeric|min:0|max:99.9',
-        'calificaciones.*.nota_parcial_3' => 'nullable|numeric|min:0|max:99.9',
+        'calificaciones.*.nota_parcial_1' => 'nullable|numeric|min:0|max:100.0',
+        'calificaciones.*.nota_parcial_2' => 'nullable|numeric|min:0|max:100.0',
+        'calificaciones.*.nota_parcial_3' => 'nullable|numeric|min:0|max:100.0',
     ];
+
 
     public function mount(Nivel $grupo)
     {
@@ -57,6 +58,31 @@ class GrupoVista extends Component
                 'nota_parcial_1' => $nota->nota_parcial_1 ?? null,
                 'nota_parcial_2' => $nota->nota_parcial_2 ?? null,
                 'nota_parcial_3' => $nota->nota_parcial_3 ?? null,
+            ];
+        }
+        // Obtener todos los alumnos del grupo
+        $alumnos = $this->grupo->alumnos()->get();
+
+        foreach ($alumnos as $alumno) {
+
+            // Si el alumno no tiene nota, la creamos
+            $nota = Nota::firstOrCreate(
+                [
+                    'alumno_id' => $alumno->id_alumno,
+                    'nivel_id'  => $this->grupo->id_nivel,
+                ],
+                [
+                    'nota_parcial_1' => 0,
+                    'nota_parcial_2' => 0,
+                    'nota_parcial_3' => 0,
+                ]
+            );
+
+            // Cargar la nota en el arreglo local
+            $this->calificaciones[$alumno->id_alumno] = [
+                'nota_parcial_1' => $nota->nota_parcial_1,
+                'nota_parcial_2' => $nota->nota_parcial_2,
+                'nota_parcial_3' => $nota->nota_parcial_3,
             ];
         }
 
@@ -162,12 +188,12 @@ class GrupoVista extends Component
     {
         $this->resetPage();
     }
-   public function descargarPlaneacion()
+    public function descargarPlaneacion()
     {
-        
+
         $documento = DocumentoProfesor::where('nivel_id', $this->grupo->id_nivel)
-                              ->where('tipo_doc', 'planeacion')
-                              ->first();
+            ->where('tipo_doc', 'planeacion')
+            ->first();
 
         if (!$documento) {
             $this->dispatch('alerta-error', ['mensaje' => 'No se encontró el documento de planeación.']);
@@ -182,22 +208,20 @@ class GrupoVista extends Component
 
         $rutaAbsolutaManual = storage_path('app') . DIRECTORY_SEPARATOR . $rutaNormalizada;
 
-        
+
         if (!file_exists($rutaAbsolutaManual)) {
- 
+
             $this->dispatch('alerta-error', ['mensaje' => 'Archivo no encontrado (verificación manual).']);
             return;
         }
-        
+
 
         return response()->download($rutaAbsolutaManual);
-        
-     
     }
     public function render()
     {
 
-        
+
         if ($this->isConcluido) {
             $alumnoIds = Nota::where('nivel_id', $this->grupo->id_nivel)
                 ->pluck('alumno_id')
