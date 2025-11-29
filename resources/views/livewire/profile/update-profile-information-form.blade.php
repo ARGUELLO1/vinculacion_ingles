@@ -146,13 +146,13 @@ new class extends Component {
             ]);
         } elseif ($mainRole === 'alumno') {
             $rules = array_merge($rules, [
-                'matricula' => ['nullable', 'string', 'max:10'],
-                'edad_alumno' => ['nullable', 'integer', 'max:99', 'min:18'],
-                'carrera_alumno' => ['nullable', 'integer'],
-                'telefono_alumno' => ['nullable', 'string', 'max:11'],
-                'sexo_alumno' => ['nullable', 'string', 'max:1'],
-                'colonia_alumno' => ['nullable', 'string', 'max:255'],
-                'municipio_alumno' => ['nullable', 'integer'],
+                'matricula' => ['required', 'nullable', 'string', 'max:10'],
+                'edad_alumno' => ['required', 'nullable', 'integer', 'max:99', 'min:18'],
+                'carrera_alumno' => ['required', 'nullable', 'integer'],
+                'telefono_alumno' => ['required', 'nullable', 'string', 'max:11'],
+                'sexo_alumno' => ['required', 'nullable', 'string', 'max:1'],
+                'colonia_alumno' => ['required', 'nullable', 'string', 'max:255'],
+                'municipio_alumno' => ['required', 'nullable', 'integer'],
             ]);
         }
 
