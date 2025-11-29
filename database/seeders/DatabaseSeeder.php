@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder
             EstatusAlumnosSeeder::class,
             UserSeeder::class,
             PeriodosSeeder::class,
-            ModalidadesSeeder::class
+            ModalidadesSeeder::class,
+            MunicipiosSeeder::class,
         ]);
     }
 }
