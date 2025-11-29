@@ -500,7 +500,7 @@ new class extends Component {
                 <x-input-label for="municipio_alumno" :value="__('Municipio')" />
                 <x-select wire:model="municipio_alumno" id="municipio_alumno" name="municipio_alumno" type="text"
                     class="mt-1 block w-full">
-                    <option value='' disabled selected>Selecciona una carrera...</option>
+                    <option value='' disabled selected>Selecciona un municipio...</option>
                     @foreach (\App\Models\Municipio::all() as $municipio)
                         <option value="{{ $municipio->id_municipio }}">{{ $municipio->nombre_municipio }}</option>
                     @endforeach
