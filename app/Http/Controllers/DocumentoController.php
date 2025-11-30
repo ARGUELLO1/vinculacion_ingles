@@ -14,24 +14,36 @@ class DocumentoController extends Controller
     public function descargar($archivo)
     {
 
-
         //Obtener el archivo dentro de la carpeta
         $ruta = base64_decode($archivo);
-        //Obtener la ruta absoluta en storage
-        $rutaFisica = Storage::path($ruta);
+        switch ($ruta) {
+            //Documento de alumno
+            case (Storage::exists($ruta)):
+                //Obtener la ruta absoluta en storage
+                $rutaFisica = Storage::path($ruta);
+                // Obtener nombre del archivo para el navegador
+                $nombre = basename($rutaFisica);
+                // Mostrarlo
+                return response()->file($rutaFisica, [
+                    'Content-Disposition' => 'inline; filename="' . $nombre . '"'
+                ]);
+                break;
+            //Constancia
+            case (Storage::disk('expedientesNiveles')->exists($ruta)):
+                $rutaFisica = Storage::disk('expedientesNiveles')->path($ruta);
+                // Obtener nombre del archivo para el navegador
+                $nombre = basename($rutaFisica);
 
-        //Verificar si existe
-        if (!Storage::exists($ruta)) {
-            abort(404, "Archivo no encontrado.");
+                // Mostrarlo
+                return response()->file($rutaFisica, [
+                    'Content-Disposition' => 'inline; filename="' . $nombre . '"'
+                ]);
+                break;
+            //Si no encuentra documento
+            default:
+                abort(404, "Archivo no encontrado.");
+                break;
         }
-
-        // Obtener nombre del archivo para el navegador
-        $nombre = basename($rutaFisica);
-
-        // Mostrarlo
-        return response()->file($rutaFisica, [
-            'Content-Disposition' => 'inline; filename="' . $nombre . '"'
-        ]);
     }
 
     public function ver($id_nivel, $id_alumno, $archivo)

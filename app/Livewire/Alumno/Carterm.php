@@ -21,17 +21,18 @@ class Carterm extends Component
         if ($this->datos_alumno->nivel_id) {
             //Sacar los datos de los documentos para ver si hay documentos o todavía no
             $this->carta_documento = DocumentoNivel::where('nivel_id', $this->datos_alumno->nivel->id_nivel)->first();
-
             //Ruta de la carpeta en donde estan las cartas de termino
             if ($this->carta_documento) {
                 //obtenemos el nombre de todos los archivos que existen en esa carpeta
-                $subcarpetas = Storage::allDirectories($this->carta_documento->ruta_doc);
-                $carpeta = $this->carta_documento->ruta_doc;
+                $ruta = dirname($this->carta_documento->ruta_doc);
+                $subcarpetas = Storage::disk('expedientesNiveles')->allDirectories($ruta);
+                $carpeta = $ruta;
                 $nom_car = 'No';
                 $this->archivos = collect($subcarpetas)->first(function ($carpeta) use ($nom_car) {
                     return Str::startsWith(basename($carpeta), $nom_car);
                 });
-                $this->archivos = Storage::allFiles($this->archivos);
+    
+                $this->archivos = Storage::disk('expedientesNiveles')->allFiles($this->archivos);
             }
         }
     }

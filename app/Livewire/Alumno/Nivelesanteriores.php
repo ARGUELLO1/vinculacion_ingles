@@ -19,7 +19,7 @@ class NivelesAnteriores extends Component
     public $expediente;
     public $niveles;
     public $documentos_nivel;
-    public $tabla=false;
+    public $tabla = false;
 
     //MODAL
     public $open = false;
@@ -57,26 +57,21 @@ class NivelesAnteriores extends Component
 
             //Verificamos si el nivel ya termino (Si existe la carpeta constancias en el nivel)
             $info_nivel = DocumentoNivel::where('nivel_id', $expediente->nivel_id)->first();
-            $info_nivel == null ? $carpetas = '' : $carpetas = Storage::allDirectories($info_nivel->ruta_doc);
-            $nivel_finalizado = collect($carpetas)->contains(function ($carpeta) {
-                return basename($carpeta) === 'Constancias';
-            });
+            $info_nivel == null ? $carpetas = '' :   $info_nivel = dirname($info_nivel->ruta_doc);
 
-            if ($nivel_finalizado) {
+            if (!$info_nivel == null) {
                 //Sacamos la constancia del alumno
-                $carpeta =  Storage::directories($info_nivel->ruta_doc);
+                $carpeta =  $info_nivel;
                 $matricula = $this->info_alumno->matricula;
-                $subcarpetas = Storage::allDirectories($info_nivel->ruta_doc);
+                $subcarpetas = Storage::disk('expedientesNiveles')->allDirectories($info_nivel);
                 $expediente->ruta_const = collect($subcarpetas)->first(function ($carpeta) use ($matricula) {
                     return Str::startsWith(basename($carpeta), $matricula);
                 });
-                if ($expediente->ruta_const != null) {
-                    $expediente->ruta_const = collect(Storage::files($expediente->ruta_const))->first();
-                }
-
+                $expediente->ruta_const = collect(Storage::disk('expedientesNiveles')->files($expediente->ruta_const))->first();
+            
                 //Parametro para indicar que el nivel finalizó
                 $expediente->finalizado = 1;
-                $this->tabla=true;
+                $this->tabla = true;
             } else {
                 $expediente->finalizado = 0;
             }

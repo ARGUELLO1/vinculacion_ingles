@@ -24,25 +24,20 @@ class Principal extends Component
     public function mount()
     {
         $this->info_alumno = Auth::user()->alumno;
-
         if ($this->info_alumno->nivel_id) {
             $this->nota = Nota::where('nivel_id', $this->info_alumno->nivel->id_nivel)->where('alumno_id', $this->info_alumno->id_alumno)->first();
             $this->documentos = Expediente::where('alumno_id', $this->info_alumno->id_alumno)->where('nivel_id', $this->info_alumno->nivel_id)->first();
-            //Buscar la constancia del alumno
+            //Buscamos la constancia del alumno
             if ($this->info_alumno->nivel->documentosNiveles) {
-                $carpeta =  Storage::directories($this->info_alumno->nivel->documentosNiveles->ruta_doc);
-                $matricula = $this->info_alumno->matricula;
-                $subcarpetas = Storage::allDirectories($this->info_alumno->nivel->documentosNiveles->ruta_doc);
-                $this->constancia = collect($subcarpetas)->first(function ($carpeta) use ($matricula) {
+                $carpeta=dirname($this->info_alumno->nivel->documentosNiveles->ruta_doc);
+                $matricula=$this->info_alumno->matricula;
+                $this->constancia = Storage::disk('expedientesNiveles')->allDirectories($carpeta);
+                $this->constancia=collect($this->constancia)->first(function ($carpeta) use ($matricula) {
                     return Str::startsWith(basename($carpeta), $matricula);
                 });
-                
-                if($this->constancia!=null){
-                    $this->constancia=Storage::files($this->constancia);
-                }
+                $this->constancia =  Storage::disk('expedientesNiveles')->files($this->constancia);
             }
         }
-
     }
 
     public function render()
